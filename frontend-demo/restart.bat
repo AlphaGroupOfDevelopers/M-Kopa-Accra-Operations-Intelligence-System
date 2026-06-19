@@ -1,0 +1,9 @@
+@echo off
+echo Stopping any running processes...
+taskkill /F /IM node.exe 2>nul
+echo.
+echo Clearing Vite cache...
+rmdir /s /q node_modules\.vite 2>nul
+echo.
+echo Starting dev server...
+npm run dev
