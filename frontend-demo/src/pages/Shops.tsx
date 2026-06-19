@@ -5,7 +5,7 @@ import { Search, Store, MapPin, Users, TrendingUp } from 'lucide-react';
 import { subDays, format } from 'date-fns';
 
 export default function Shops() {
-  const { shops, salesRecords, agents, assignments } = useApp();
+  const { shops, salesRecords, agents } = useApp();
   const [searchTerm, setSearchTerm] = useState('');
 
   const shopsWithStats = useMemo(() => {

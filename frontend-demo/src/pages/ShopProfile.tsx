@@ -1,9 +1,9 @@
 import { useMemo } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
-import { ArrowLeft, MapPin, Store, Users, TrendingUp, Calendar } from 'lucide-react';
-import { format, formatDistance } from 'date-fns';
-import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
+import { ArrowLeft, MapPin, Store, Calendar } from 'lucide-react';
+import { format } from 'date-fns';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 
 export default function ShopProfile() {
   const { shopId } = useParams<{ shopId: string }>();
@@ -168,7 +168,7 @@ export default function ShopProfile() {
         <h2 className="text-xl font-bold text-gray-800 mb-4">Current Team Performance</h2>
         {shopData.agentPerformance.length > 0 ? (
           <div className="space-y-3">
-            {shopData.agentPerformance.map((item, index) => (
+            {shopData.agentPerformance.map((item) => (
               <Link key={item.agent.id} to={`/team-members/${item.agent.id}`}>
                 <div className="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg transition-colors cursor-pointer">
                   <div className="flex items-center">

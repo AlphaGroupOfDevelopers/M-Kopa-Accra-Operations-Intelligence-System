@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { useApp } from '../context/AppContext';
-import { TrendingUp, Award, AlertTriangle, FileDown, Calendar } from 'lucide-react';
-import { format, subDays, startOfMonth, endOfMonth } from 'date-fns';
+import { AlertTriangle, FileDown, Calendar, Award, TrendingUp } from 'lucide-react';
+import { format, subDays, startOfMonth } from 'date-fns';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, BarChart, Bar, XAxis, YAxis, CartesianGrid, Legend } from 'recharts';
 
 export default function ExecutiveDashboard() {
@@ -10,7 +10,6 @@ export default function ExecutiveDashboard() {
   const executiveData = useMemo(() => {
     const today = format(new Date(), 'yyyy-MM-dd');
     const monthStart = format(startOfMonth(new Date()), 'yyyy-MM-dd');
-    const monthEnd = format(endOfMonth(new Date()), 'yyyy-MM-dd');
 
     // Today's metrics
     const todaySales = salesRecords
@@ -182,12 +181,12 @@ export default function ExecutiveDashboard() {
                 cx="50%"
                 cy="50%"
                 labelLine={false}
-                label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                label={({ name, percent }) => `${name} ${((percent || 0) * 100).toFixed(0)}%`}
                 outerRadius={80}
                 fill="#8884d8"
                 dataKey="value"
               >
-                {executiveData.shopDistribution.map((entry, index) => (
+                {executiveData.shopDistribution.map((_, index) => (
                   <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                 ))}
               </Pie>

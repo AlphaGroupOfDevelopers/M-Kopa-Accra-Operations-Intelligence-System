@@ -2,13 +2,12 @@ import { useMemo } from 'react';
 import { useApp } from '../context/AppContext';
 import { TrendingUp, TrendingDown, Target, Award, AlertCircle } from 'lucide-react';
 import { format, subDays, subMonths } from 'date-fns';
-import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 export default function SalesIntelligence() {
-  const { salesRecords, shops, agents } = useApp();
+  const { salesRecords, shops } = useApp();
 
   const intelligence = useMemo(() => {
-    const today = format(new Date(), 'yyyy-MM-dd');
     const last7Days = format(subDays(new Date(), 7), 'yyyy-MM-dd');
     const last30Days = format(subDays(new Date(), 30), 'yyyy-MM-dd');
     const last60Days = format(subDays(new Date(), 60), 'yyyy-MM-dd');

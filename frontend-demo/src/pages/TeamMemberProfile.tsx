@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
-import { ArrowLeft, Mail, Phone, Calendar, GraduationCap, Briefcase, TrendingUp, MapPin } from 'lucide-react';
+import { ArrowLeft, Mail, Phone, Calendar, GraduationCap, MapPin } from 'lucide-react';
 import { format, formatDistance } from 'date-fns';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
@@ -181,7 +181,7 @@ export default function TeamMemberProfile() {
       <div className="card">
         <h2 className="text-xl font-bold text-gray-800 mb-4">Shop Assignment History</h2>
         <div className="space-y-4">
-          {agentData.agentAssignments.map((item, index) => (
+          {agentData.agentAssignments.map(item => (
             <div key={item.assignment.id} className="border-l-4 border-[#39B54A] pl-4 py-2">
               <div className="flex justify-between items-start">
                 <div>

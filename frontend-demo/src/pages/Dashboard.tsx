@@ -1,8 +1,8 @@
 import { useMemo } from 'react';
 import { useApp } from '../context/AppContext';
-import { format, subDays, startOfDay, isAfter } from 'date-fns';
-import { TrendingUp, TrendingDown, Users, Store, AlertTriangle, Award } from 'lucide-react';
-import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { format, subDays } from 'date-fns';
+import { TrendingUp, TrendingDown, Users, AlertTriangle, Award } from 'lucide-react';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Link } from 'react-router-dom';
 
 export default function Dashboard() {
@@ -122,7 +122,7 @@ export default function Dashboard() {
               <p className="text-3xl font-bold text-gray-800 mt-1">{stats.last7DaysSales}</p>
             </div>
             <div className="p-3 rounded-full bg-blue-100">
-              <BarChart size={24} className="text-blue-600" />
+              <TrendingUp size={24} className="text-blue-600" />
             </div>
           </div>
           <p className="text-sm text-gray-600 mt-2">

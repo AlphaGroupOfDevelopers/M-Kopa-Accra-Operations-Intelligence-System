@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { useApp } from '../context/AppContext';
 import { Link } from 'react-router-dom';
-import { Search, Users, TrendingUp, Mail, Phone } from 'lucide-react';
+import { Search, Users, Mail, Phone } from 'lucide-react';
 import { subDays, format } from 'date-fns';
 
 export default function TeamMembers() {

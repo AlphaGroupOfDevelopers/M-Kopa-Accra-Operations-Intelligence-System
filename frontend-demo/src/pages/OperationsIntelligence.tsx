@@ -9,7 +9,6 @@ export default function OperationsIntelligence() {
 
   const operations = useMemo(() => {
     const today = format(new Date(), 'yyyy-MM-dd');
-    const last7Days = format(subDays(new Date(), 7), 'yyyy-MM-dd');
     const last30Days = format(subDays(new Date(), 30), 'yyyy-MM-dd');
 
     // Challenge Intelligence - Analyze remarks
@@ -160,7 +159,7 @@ export default function OperationsIntelligence() {
                 <YAxis />
                 <Tooltip />
                 <Bar dataKey="count" name="Occurrences">
-                  {operations.challengesData.map((entry, index) => (
+                  {operations.challengesData.map((_, index) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Bar>

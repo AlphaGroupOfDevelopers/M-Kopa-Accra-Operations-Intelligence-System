@@ -1,5 +1,5 @@
 // Mock Data for M-Kopa AOIS Demo
-import { subDays, subMonths, format } from 'date-fns';
+import { subDays, format } from 'date-fns';
 import type { Agent, Shop, Assignment, SalesRecord } from '../types';
 
 // Re-export types for convenience
