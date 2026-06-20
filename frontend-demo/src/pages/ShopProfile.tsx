@@ -128,16 +128,36 @@ export default function ShopProfile() {
             </div>
             <div className="profile-header-details">
               <h1 className="profile-title">{shop.name}</h1>
-              <p className="profile-subtitle">{shop.shopCode}</p>
-              <div className="profile-location">
-                <MapPin size={16} style={{ marginRight: '0.25rem' }} />
-                <span>{shop.location}, {shop.region}</span>
-              </div>
+              <p className="profile-subtitle" style={{ textTransform: 'capitalize' }}>{shop.status} Shop</p>
             </div>
           </div>
           <span className={`profile-status ${shop.status === 'active' ? 'active' : 'inactive'}`}>
             {shop.status.toUpperCase()}
           </span>
+        </div>
+
+        <div className="profile-info-grid">
+          <div className="profile-info-item">
+            <Store className="profile-info-icon" size={20} />
+            <div>
+              <p className="profile-info-label">Shop Code</p>
+              <p className="profile-info-value">{shop.shopCode}</p>
+            </div>
+          </div>
+          <div className="profile-info-item">
+            <MapPin className="profile-info-icon" size={20} />
+            <div>
+              <p className="profile-info-label">Location</p>
+              <p className="profile-info-value">{shop.location}</p>
+            </div>
+          </div>
+          <div className="profile-info-item">
+            <MapPin className="profile-info-icon" size={20} />
+            <div>
+              <p className="profile-info-label">Region</p>
+              <p className="profile-info-value">{shop.region}</p>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -163,17 +183,19 @@ export default function ShopProfile() {
       {/* Sales Trend */}
       <div className="card">
         <h2 className="card-title">30-Day Sales Trend</h2>
-        <div className="chart-container" style={{ height: '300px' }}>
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={shopData.trendData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} />
-              <XAxis dataKey="date" axisLine={false} tickLine={false} dy={10} />
-              <YAxis axisLine={false} tickLine={false} />
-              <Tooltip cursor={{ stroke: 'var(--border-color)', strokeWidth: 1 }} />
-              <Legend />
-              <Line type="monotone" dataKey="sales" stroke="var(--accent-green)" strokeWidth={3} name="Devices Sold" dot={false} activeDot={{ r: 6 }} />
-            </LineChart>
-          </ResponsiveContainer>
+        <div className="chart-scroll-wrapper">
+          <div className="chart-container" style={{ height: '300px', minWidth: '500px' }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={shopData.trendData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                <XAxis dataKey="date" axisLine={false} tickLine={false} dy={10} />
+                <YAxis axisLine={false} tickLine={false} />
+                <Tooltip cursor={{ stroke: 'var(--border-color)', strokeWidth: 1 }} />
+                <Legend />
+                <Line type="monotone" dataKey="sales" stroke="var(--accent-green)" strokeWidth={3} name="Devices Sold" dot={false} activeDot={{ r: 6 }} />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
         </div>
       </div>
 
@@ -209,58 +231,80 @@ export default function ShopProfile() {
       <div className="card">
         <h2 className="card-title" style={{ marginBottom: '1rem' }}>Staff Tenure & Performance History</h2>
         <div className="profile-history-list">
-          {shopData.staffTenure.map(item => (
-            <div key={item.assignment.id} className="profile-history-item">
-              <div className="profile-history-header">
-                <div>
-                  <div className="profile-history-agent">
-                    <h3 className="profile-history-name">{item.agent?.name || 'Unknown Agent'}</h3>
-                    <span className={`profile-history-status ${item.status === 'Current' ? 'current' : 'past'}`}>
-                      {item.status}
-                    </span>
+          {(() => {
+            const currentStaff = shopData.staffTenure.filter(item => item.status === 'Current');
+            const pastStaff = shopData.staffTenure.filter(item => item.status === 'Past');
+
+            const renderHistoryItem = (item: any) => (
+              <div key={item.assignment.id} className={`profile-history-item ${item.status === 'Current' ? 'current' : 'past'}`}>
+                <div className="profile-history-header">
+                  <div>
+                    <div className="profile-history-agent">
+                      <h3 className="profile-history-name">{item.agent?.name || 'Unknown Agent'}</h3>
+                      <span className={`profile-history-status ${item.status === 'Current' ? 'current' : 'past'}`}>
+                        {item.status}
+                      </span>
+                    </div>
+                    <div className="profile-history-dates">
+                      <Calendar size={14} style={{ marginRight: '0.25rem' }} />
+                      <span>
+                        {format(new Date(item.assignment.startDate), 'MMM dd, yyyy')} 
+                        {item.assignment.endDate 
+                          ? ` - ${format(new Date(item.assignment.endDate), 'MMM dd, yyyy')}`
+                          : ' - Present'
+                        }
+                      </span>
+                      <span className="profile-history-days">
+                        {item.daysActive} days
+                      </span>
+                    </div>
+                    {item.assignment.reason && (
+                      <p className="profile-history-reason">Reason: {item.assignment.reason}</p>
+                    )}
                   </div>
-                  <div className="profile-history-dates">
-                    <Calendar size={14} style={{ marginRight: '0.25rem' }} />
-                    <span>
-                      {format(new Date(item.assignment.startDate), 'MMM dd, yyyy')} 
-                      {item.assignment.endDate 
-                        ? ` - ${format(new Date(item.assignment.endDate), 'MMM dd, yyyy')}`
-                        : ' - Present'
-                      }
-                    </span>
-                    <span className="profile-history-days">
-                      {item.daysActive} days
-                    </span>
+                  <div className="profile-history-sales">
+                    <p className="profile-history-sales-val">{item.sales}</p>
+                    <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>devices sold</p>
+                    <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginTop: '0.25rem' }}>
+                      {item.daysActive > 0 ? (item.sales / item.daysActive).toFixed(1) : '0'}/day
+                    </p>
                   </div>
-                  {item.assignment.reason && (
-                    <p className="profile-history-reason">Reason: {item.assignment.reason}</p>
-                  )}
                 </div>
-                <div className="profile-history-sales">
-                  <p className="profile-history-sales-val">{item.sales}</p>
-                  <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>devices sold</p>
-                  <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginTop: '0.25rem' }}>
-                    {item.daysActive > 0 ? (item.sales / item.daysActive).toFixed(1) : '0'}/day
-                  </p>
-                </div>
+                
+                {/* Monthly Breakdown */}
+                {item.monthlySales.length > 0 && (
+                  <div style={{ marginTop: '1rem', paddingTop: '1rem', borderTop: '1px solid var(--border-color)' }}>
+                    <h4 style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>Monthly Performance</h4>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(100px, 1fr))', gap: '0.5rem', maxHeight: '160px', overflowY: 'auto', paddingRight: '0.5rem', scrollbarWidth: 'thin' }}>
+                      {item.monthlySales.map((ms: any) => (
+                        <div key={ms.month} style={{ backgroundColor: 'var(--bg-main)', padding: '0.5rem', borderRadius: '4px', textAlign: 'center' }}>
+                          <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>{ms.month}</p>
+                          <p style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--text-primary)' }}>{ms.sales}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
-              
-              {/* Monthly Breakdown */}
-              {item.monthlySales.length > 0 && (
-                <div style={{ marginTop: '1rem', paddingTop: '1rem', borderTop: '1px solid var(--border-color)' }}>
-                  <h4 style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>Monthly Performance</h4>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(100px, 1fr))', gap: '0.5rem', maxHeight: '160px', overflowY: 'auto', paddingRight: '0.5rem', scrollbarWidth: 'thin' }}>
-                    {item.monthlySales.map(ms => (
-                      <div key={ms.month} style={{ backgroundColor: 'var(--bg-main)', padding: '0.5rem', borderRadius: '4px', textAlign: 'center' }}>
-                        <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>{ms.month}</p>
-                        <p style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--text-primary)' }}>{ms.sales}</p>
-                      </div>
-                    ))}
+            );
+
+            return (
+              <>
+                {currentStaff.length > 0 && (
+                  <div className="profile-history-group">
+                    <h3 className="profile-history-group-title">Current Team</h3>
+                    {currentStaff.map(renderHistoryItem)}
                   </div>
-                </div>
-              )}
-            </div>
-          ))}
+                )}
+                {pastStaff.length > 0 && (
+                  <div className="profile-history-group">
+                    <h3 className="profile-history-group-title">Past Team</h3>
+                    {pastStaff.map(renderHistoryItem)}
+                  </div>
+                )}
+              </>
+            );
+          })()}
         </div>
       </div>
     </div>

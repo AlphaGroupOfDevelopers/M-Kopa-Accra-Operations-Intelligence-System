@@ -133,33 +133,33 @@ export default function TeamMemberProfile() {
           </span>
         </div>
 
-        <div className="agent-info-grid">
-          <div className="agent-info-item">
-            <Mail className="agent-info-icon" size={20} />
+        <div className="profile-info-grid">
+          <div className="profile-info-item">
+            <Mail className="profile-info-icon" size={20} />
             <div>
-              <p className="agent-info-label">Email</p>
-              <p className="agent-info-value">{agent.email}</p>
+              <p className="profile-info-label">Email</p>
+              <p className="profile-info-value">{agent.email}</p>
             </div>
           </div>
-          <div className="agent-info-item">
-            <Phone className="agent-info-icon" size={20} />
+          <div className="profile-info-item">
+            <Phone className="profile-info-icon" size={20} />
             <div>
-              <p className="agent-info-label">Phone</p>
-              <p className="agent-info-value">{agent.phone}</p>
+              <p className="profile-info-label">Phone</p>
+              <p className="profile-info-value">{agent.phone}</p>
             </div>
           </div>
-          <div className="agent-info-item">
-            <Calendar className="agent-info-icon" size={20} />
+          <div className="profile-info-item">
+            <Calendar className="profile-info-icon" size={20} />
             <div>
-              <p className="agent-info-label">Date of Birth</p>
-              <p className="agent-info-value">{format(new Date(agent.dateOfBirth), 'MMM dd, yyyy')}</p>
+              <p className="profile-info-label">Date of Birth</p>
+              <p className="profile-info-value">{format(new Date(agent.dateOfBirth), 'MMM dd, yyyy')}</p>
             </div>
           </div>
-          <div className="agent-info-item">
-            <GraduationCap className="agent-info-icon" size={20} />
+          <div className="profile-info-item">
+            <GraduationCap className="profile-info-icon" size={20} />
             <div>
-              <p className="agent-info-label">Education</p>
-              <p className="agent-info-value">{agent.education}</p>
+              <p className="profile-info-label">Education</p>
+              <p className="profile-info-value">{agent.education}</p>
             </div>
           </div>
         </div>
@@ -189,16 +189,18 @@ export default function TeamMemberProfile() {
       {/* Performance Trend */}
       <div className="card">
         <h2 className="card-title">14-Day Performance Trend</h2>
-        <div className="chart-container" style={{ height: '250px' }}>
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={agentData.trendData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} />
-              <XAxis dataKey="date" axisLine={false} tickLine={false} dy={10} />
-              <YAxis axisLine={false} tickLine={false} />
-              <Tooltip cursor={{ stroke: 'var(--border-color)', strokeWidth: 1 }} />
-              <Line type="monotone" dataKey="sales" stroke="var(--accent-green)" strokeWidth={3} name="Devices Sold" dot={false} activeDot={{ r: 6 }} />
-            </LineChart>
-          </ResponsiveContainer>
+        <div className="chart-scroll-wrapper">
+          <div className="chart-container" style={{ height: '250px', minWidth: '500px' }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={agentData.trendData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                <XAxis dataKey="date" axisLine={false} tickLine={false} dy={10} />
+                <YAxis axisLine={false} tickLine={false} />
+                <Tooltip cursor={{ stroke: 'var(--border-color)', strokeWidth: 1 }} />
+                <Line type="monotone" dataKey="sales" stroke="var(--accent-green)" strokeWidth={3} name="Devices Sold" dot={false} activeDot={{ r: 6 }} />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
         </div>
       </div>
 
@@ -206,52 +208,77 @@ export default function TeamMemberProfile() {
       <div className="card">
         <h2 className="card-title" style={{ marginBottom: '1rem' }}>Shop Assignment History</h2>
         <div className="profile-history-list">
-          {agentData.agentAssignments.map(item => (
-            <div key={item.assignment.id} className="profile-history-item">
-              <div className="profile-history-header">
-                <div>
-                  <h3 className="profile-history-name">{item.shop?.name || 'Unknown Shop'}</h3>
-                  <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>{item.shop?.location}</p>
-                  <div className="profile-history-dates">
-                    <Calendar size={14} style={{ marginRight: '0.25rem' }} />
-                    <span>
-                      {format(new Date(item.assignment.startDate), 'MMM dd, yyyy')} 
-                      {item.assignment.endDate 
-                        ? ` - ${format(new Date(item.assignment.endDate), 'MMM dd, yyyy')}`
-                        : ' - Present'
-                      }
-                    </span>
-                    <span className="profile-history-days">
-                      {item.daysActive} days
-                    </span>
+          {(() => {
+            const currentAssignments = agentData.agentAssignments.filter(item => !item.assignment.endDate);
+            const pastAssignments = agentData.agentAssignments.filter(item => item.assignment.endDate);
+
+            const renderAssignmentItem = (item: any) => {
+              const isCurrent = !item.assignment.endDate;
+              return (
+                <div key={item.assignment.id} className={`profile-history-item ${isCurrent ? 'current' : 'past'}`}>
+                  <div className="profile-history-header">
+                    <div>
+                      <h3 className="profile-history-name">{item.shop?.name || 'Unknown Shop'}</h3>
+                      <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>{item.shop?.location}</p>
+                      <div className="profile-history-dates">
+                        <Calendar size={14} style={{ marginRight: '0.25rem' }} />
+                        <span>
+                          {format(new Date(item.assignment.startDate), 'MMM dd, yyyy')} 
+                          {item.assignment.endDate 
+                            ? ` - ${format(new Date(item.assignment.endDate), 'MMM dd, yyyy')}`
+                            : ' - Present'
+                          }
+                        </span>
+                        <span className="profile-history-days">
+                          {item.daysActive} days
+                        </span>
+                      </div>
+                      {item.assignment.reason && (
+                        <p className="profile-history-reason">Reason: {item.assignment.reason}</p>
+                      )}
+                    </div>
+                    <div className="profile-history-sales">
+                      <p className="profile-history-sales-val">{item.sales}</p>
+                      <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>total sales</p>
+                      <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginTop: '0.25rem' }}>{item.avgDaily}/day avg</p>
+                    </div>
                   </div>
-                  {item.assignment.reason && (
-                    <p className="profile-history-reason">Reason: {item.assignment.reason}</p>
+                  
+                  {/* Monthly Breakdown */}
+                  {item.monthlySales.length > 0 && (
+                    <div style={{ marginTop: '1rem', paddingTop: '1rem', borderTop: '1px solid var(--border-color)' }}>
+                      <h4 style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>Monthly Performance</h4>
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(100px, 1fr))', gap: '0.5rem', maxHeight: '160px', overflowY: 'auto', paddingRight: '0.5rem', scrollbarWidth: 'thin' }}>
+                        {item.monthlySales.map((ms: any) => (
+                          <div key={ms.month} style={{ backgroundColor: 'var(--bg-main)', padding: '0.5rem', borderRadius: '4px', textAlign: 'center' }}>
+                            <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>{ms.month}</p>
+                            <p style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--text-primary)' }}>{ms.sales}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
                   )}
                 </div>
-                <div className="profile-history-sales">
-                  <p className="profile-history-sales-val">{item.sales}</p>
-                  <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>total sales</p>
-                  <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginTop: '0.25rem' }}>{item.avgDaily}/day avg</p>
-                </div>
-              </div>
-              
-              {/* Monthly Breakdown */}
-              {item.monthlySales.length > 0 && (
-                <div style={{ marginTop: '1rem', paddingTop: '1rem', borderTop: '1px solid var(--border-color)' }}>
-                  <h4 style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>Monthly Performance</h4>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(100px, 1fr))', gap: '0.5rem', maxHeight: '160px', overflowY: 'auto', paddingRight: '0.5rem', scrollbarWidth: 'thin' }}>
-                    {item.monthlySales.map(ms => (
-                      <div key={ms.month} style={{ backgroundColor: 'var(--bg-main)', padding: '0.5rem', borderRadius: '4px', textAlign: 'center' }}>
-                        <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>{ms.month}</p>
-                        <p style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--text-primary)' }}>{ms.sales}</p>
-                      </div>
-                    ))}
+              );
+            };
+
+            return (
+              <>
+                {currentAssignments.length > 0 && (
+                  <div className="profile-history-group">
+                    <h3 className="profile-history-group-title">Current Assignment</h3>
+                    {currentAssignments.map(renderAssignmentItem)}
                   </div>
-                </div>
-              )}
-            </div>
-          ))}
+                )}
+                {pastAssignments.length > 0 && (
+                  <div className="profile-history-group">
+                    <h3 className="profile-history-group-title">Past Assignments</h3>
+                    {pastAssignments.map(renderAssignmentItem)}
+                  </div>
+                )}
+              </>
+            );
+          })()}
         </div>
       </div>
     </div>
