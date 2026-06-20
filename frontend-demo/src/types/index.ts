@@ -9,6 +9,7 @@ export interface Agent {
   currentShopId: string;
   status: 'active' | 'inactive';
   photo?: string;
+  role?: 'main' | 'assistant';
 }
 
 export interface Shop {
@@ -18,6 +19,7 @@ export interface Shop {
   region: string;
   shopCode: string;
   status: 'active' | 'inactive';
+  baseTraffic?: number;
 }
 
 export interface Assignment {
@@ -27,6 +29,7 @@ export interface Assignment {
   startDate: string;
   endDate?: string;
   reason?: string;
+  role?: 'main' | 'assistant';
 }
 
 export interface SalesRecord {

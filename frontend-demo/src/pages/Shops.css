@@ -1,0 +1,180 @@
+.shops-header-actions {
+  display: flex;
+  align-items: center;
+  background-color: var(--accent-green-light);
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-lg);
+  color: var(--accent-green);
+  font-weight: 600;
+}
+
+.shops-search-wrapper {
+  position: relative;
+}
+
+.shops-search-icon {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+}
+
+.shops-search-input {
+  width: 100%;
+  padding: 0.5rem 1rem 0.5rem 2.5rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  font-family: inherit;
+  font-size: 0.875rem;
+  color: var(--text-primary);
+  background-color: var(--bg-card);
+  transition: all 0.2s ease;
+}
+
+.shops-search-input:focus {
+  outline: none;
+  border-color: var(--accent-green);
+  box-shadow: 0 0 0 2px rgba(57, 181, 74, 0.2);
+}
+
+.shops-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  padding-bottom: 1rem;
+}
+
+.shop-card {
+  transition: box-shadow 0.2s ease;
+  cursor: pointer;
+  height: 100%;
+}
+
+.shop-card:hover {
+  box-shadow: var(--shadow-lg);
+}
+
+.shop-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.shop-card-icon {
+  width: 3rem;
+  height: 3rem;
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 700;
+  margin-right: 0.75rem;
+}
+
+.shop-card-icon.gold { background-color: var(--accent-yellow); }
+.shop-card-icon.silver { background-color: var(--text-muted); }
+.shop-card-icon.bronze { background-color: var(--accent-orange); }
+.shop-card-icon.default { background: linear-gradient(135deg, var(--accent-green), #1e7029); }
+
+.shop-card-info-wrapper {
+  min-width: 0;
+  flex: 1;
+}
+
+.shop-card-title {
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.shop-card-code {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.shop-status-badge {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  border-radius: 9999px;
+  font-weight: 600;
+}
+
+.shop-status-badge.active {
+  background-color: var(--accent-green-light);
+  color: var(--accent-green);
+}
+
+.shop-status-badge.inactive {
+  background-color: var(--border-color);
+  color: var(--text-secondary);
+}
+
+.shop-info-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.shop-info-item {
+  display: flex;
+  align-items: center;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.shop-info-icon {
+  margin-right: 0.5rem;
+}
+
+.shop-stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  border-top: 1px solid var(--border-color);
+  padding-top: 1rem;
+}
+
+.shop-stat-label {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.25rem;
+}
+
+.shop-stat-value {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.shop-top-performer {
+  margin-top: 0.75rem;
+  display: flex;
+  align-items: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--accent-yellow);
+}
+
+.shops-empty-state {
+  text-align: center;
+  padding: 3rem 0;
+}
+
+.shops-empty-icon {
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+}
+
+.shops-empty-text {
+  color: var(--text-secondary);
+}

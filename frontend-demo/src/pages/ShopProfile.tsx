@@ -2,8 +2,10 @@ import { useMemo } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 import { ArrowLeft, MapPin, Store, Calendar } from 'lucide-react';
-import { format } from 'date-fns';
+import { format, differenceInDays } from 'date-fns';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
+import './Dashboard.css';
+import './ShopProfile.css';
 
 export default function ShopProfile() {
   const { shopId } = useParams<{ shopId: string }>();
@@ -58,19 +60,33 @@ export default function ShopProfile() {
     // Historical staff tenure
     const staffTenure = shopAssignments.map(assignment => {
       const agent = agents.find(a => a.id === assignment.agentId);
-      const daysActive = assignment.endDate
-        ? Math.ceil((new Date(assignment.endDate).getTime() - new Date(assignment.startDate).getTime()) / (1000 * 60 * 60 * 24))
-        : Math.ceil((new Date().getTime() - new Date(assignment.startDate).getTime()) / (1000 * 60 * 60 * 24));
+      const start = new Date(assignment.startDate).getTime();
+      const end = assignment.endDate ? new Date(assignment.endDate).getTime() : new Date().getTime();
+      const daysActive = differenceInDays(end, start) + 1;
 
-      const assignmentSales = salesRecords
-        .filter(r => r.agentId === assignment.agentId && r.shopId === shop.id)
-        .reduce((sum, r) => sum + r.devicesSold, 0);
+      // Group sales by month using shop sales for the period (credits both main and assistant)
+      const monthlySales: Record<string, number> = {};
+      
+      salesRecords
+        .filter(r => {
+          if (r.shopId !== shop.id) return false;
+          const recordTime = new Date(r.date).getTime();
+          return recordTime >= start && recordTime <= end;
+        })
+        .forEach(r => {
+          const monthYear = format(new Date(r.date), 'MMM yyyy');
+          monthlySales[monthYear] = (monthlySales[monthYear] || 0) + r.devicesSold;
+        });
+
+      const totalSales = Object.values(monthlySales).reduce((sum, val) => sum + val, 0);
+      const monthlySalesArray = Object.entries(monthlySales).map(([month, sales]) => ({ month, sales }));
 
       return {
         assignment,
         agent,
         daysActive,
-        sales: assignmentSales,
+        sales: totalSales,
+        monthlySales: monthlySalesArray,
         status: assignment.endDate ? 'Past' : 'Current',
       };
     }).sort((a, b) => b.sales - a.sales);
@@ -87,9 +103,9 @@ export default function ShopProfile() {
 
   if (!shop || !shopData) {
     return (
-      <div className="card text-center py-12">
-        <p className="text-gray-600">Shop not found</p>
-        <Link to="/shops" className="text-red-600 hover:text-red-700 mt-4 inline-block">
+      <div className="card" style={{ textAlign: 'center', padding: '3rem 0' }}>
+        <p style={{ color: 'var(--text-secondary)' }}>Shop not found</p>
+        <Link to="/shops" style={{ color: 'var(--accent-red)', marginTop: '1rem', display: 'inline-block', textDecoration: 'none' }}>
           Back to Shops
         </Link>
       </div>
@@ -97,122 +113,114 @@ export default function ShopProfile() {
   }
 
   return (
-    <div className="space-y-6">
-      <Link to="/shops" className="flex items-center text-gray-600 hover:text-gray-800">
-        <ArrowLeft size={20} className="mr-2" />
+    <div className="dashboard-container">
+      <Link to="/shops" className="profile-back-link">
+        <ArrowLeft size={20} style={{ marginRight: '0.5rem' }} />
         Back to Shops
       </Link>
 
       {/* Shop Header */}
       <div className="card">
-        <div className="flex items-start justify-between">
-          <div className="flex items-center">
-            <div className="w-20 h-20 bg-gradient-to-br from-green-500 to-green-700 rounded-lg flex items-center justify-center text-white">
+        <div className="profile-header-card">
+          <div className="profile-header-info">
+            <div className="profile-header-icon">
               <Store size={40} />
             </div>
-            <div className="ml-6">
-              <h1 className="text-3xl font-bold text-gray-800">{shop.name}</h1>
-              <p className="text-gray-600 mt-1">{shop.shopCode}</p>
-              <div className="flex items-center mt-2">
-                <MapPin size={16} className="text-gray-500 mr-1" />
-                <span className="text-sm text-gray-600">{shop.location}, {shop.region}</span>
+            <div className="profile-header-details">
+              <h1 className="profile-title">{shop.name}</h1>
+              <p className="profile-subtitle">{shop.shopCode}</p>
+              <div className="profile-location">
+                <MapPin size={16} style={{ marginRight: '0.25rem' }} />
+                <span>{shop.location}, {shop.region}</span>
               </div>
             </div>
           </div>
-          <span className={`px-4 py-2 rounded-full font-semibold ${
-            shop.status === 'active' 
-              ? 'bg-green-100 text-green-700' 
-              : 'bg-gray-100 text-gray-700'
-          }`}>
+          <span className={`profile-status ${shop.status === 'active' ? 'active' : 'inactive'}`}>
             {shop.status.toUpperCase()}
           </span>
         </div>
       </div>
 
       {/* Performance Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="card">
-          <p className="text-sm text-gray-600">Total Sales (All Time)</p>
-          <p className="text-3xl font-bold text-gray-800 mt-2">{shopData.totalSales}</p>
-          <p className="text-xs text-gray-600 mt-1">devices sold</p>
+      <div className="profile-stats-grid">
+        <div className="card profile-stat-card">
+          <p className="profile-stat-label">Total Sales (All Time)</p>
+          <p className="profile-stat-value">{shopData.totalSales}</p>
+          <p className="profile-stat-subtext">devices sold</p>
         </div>
-        <div className="card">
-          <p className="text-sm text-gray-600">Current Team Size</p>
-          <p className="text-3xl font-bold text-gray-800 mt-2">{shopData.currentAgents.length}</p>
-          <p className="text-xs text-gray-600 mt-1">active agents</p>
+        <div className="card profile-stat-card">
+          <p className="profile-stat-label">Current Team Size</p>
+          <p className="profile-stat-value">{shopData.currentAgents.length}</p>
+          <p className="profile-stat-subtext">active agents</p>
         </div>
-        <div className="card">
-          <p className="text-sm text-gray-600">Total Staff History</p>
-          <p className="text-3xl font-bold text-gray-800 mt-2">{shopData.allAgentsWhoWorkedHere.length}</p>
-          <p className="text-xs text-gray-600 mt-1">agents worked here</p>
+        <div className="card profile-stat-card">
+          <p className="profile-stat-label">Total Staff History</p>
+          <p className="profile-stat-value">{shopData.allAgentsWhoWorkedHere.length}</p>
+          <p className="profile-stat-subtext">agents worked here</p>
         </div>
       </div>
 
       {/* Sales Trend */}
       <div className="card">
-        <h2 className="text-xl font-bold text-gray-800 mb-4">30-Day Sales Trend</h2>
-        <ResponsiveContainer width="100%" height={300}>
-          <LineChart data={shopData.trendData}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="date" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Line type="monotone" dataKey="sales" stroke="#39B54A" strokeWidth={2} name="Devices Sold" />
-          </LineChart>
-        </ResponsiveContainer>
+        <h2 className="card-title">30-Day Sales Trend</h2>
+        <div className="chart-container" style={{ height: '300px' }}>
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart data={shopData.trendData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+              <CartesianGrid strokeDasharray="3 3" vertical={false} />
+              <XAxis dataKey="date" axisLine={false} tickLine={false} dy={10} />
+              <YAxis axisLine={false} tickLine={false} />
+              <Tooltip cursor={{ stroke: 'var(--border-color)', strokeWidth: 1 }} />
+              <Legend />
+              <Line type="monotone" dataKey="sales" stroke="var(--accent-green)" strokeWidth={3} name="Devices Sold" dot={false} activeDot={{ r: 6 }} />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
       </div>
 
       {/* Current Team Performance */}
       <div className="card">
-        <h2 className="text-xl font-bold text-gray-800 mb-4">Current Team Performance</h2>
+        <h2 className="card-title" style={{ marginBottom: '1rem' }}>Current Team Performance</h2>
         {shopData.agentPerformance.length > 0 ? (
-          <div className="space-y-3">
+          <div className="profile-team-list">
             {shopData.agentPerformance.map((item) => (
-              <Link key={item.agent.id} to={`/team-members/${item.agent.id}`}>
-                <div className="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg transition-colors cursor-pointer">
-                  <div className="flex items-center">
-                    <div className="w-10 h-10 bg-gradient-to-br from-red-500 to-red-700 rounded-full flex items-center justify-center text-white font-bold">
-                      {item.agent.name.split(' ').map(n => n[0]).join('')}
-                    </div>
-                    <div className="ml-3">
-                      <p className="font-semibold text-gray-800">{item.agent.name}</p>
-                      <p className="text-sm text-gray-600">{item.agent.email}</p>
-                    </div>
+              <Link key={item.agent.id} to={`/team-members/${item.agent.id}`} className="profile-team-item">
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <div className="profile-team-avatar">
+                    {item.agent.name.split(' ').map(n => n[0]).join('')}
                   </div>
-                  <div className="text-right">
-                    <p className="text-xl font-bold text-gray-800">{item.sales}</p>
-                    <p className="text-xs text-gray-600">total sales</p>
+                  <div className="profile-team-info">
+                    <p className="profile-team-name">{item.agent.name}</p>
+                    <p className="profile-team-email">{item.agent.email}</p>
                   </div>
+                </div>
+                <div style={{ textAlign: 'right' }}>
+                  <p className="profile-team-sales">{item.sales}</p>
+                  <p className="profile-team-sales-label">total sales</p>
                 </div>
               </Link>
             ))}
           </div>
         ) : (
-          <p className="text-gray-600 text-center py-6">No current team members</p>
+          <p style={{ color: 'var(--text-secondary)', textAlign: 'center', padding: '1.5rem 0' }}>No current team members</p>
         )}
       </div>
 
       {/* Staff Tenure History */}
       <div className="card">
-        <h2 className="text-xl font-bold text-gray-800 mb-4">Staff Tenure & Performance History</h2>
-        <div className="space-y-3">
+        <h2 className="card-title" style={{ marginBottom: '1rem' }}>Staff Tenure & Performance History</h2>
+        <div className="profile-history-list">
           {shopData.staffTenure.map(item => (
-            <div key={item.assignment.id} className="border-l-4 border-[#39B54A] pl-4 py-2">
-              <div className="flex justify-between items-start">
+            <div key={item.assignment.id} className="profile-history-item">
+              <div className="profile-history-header">
                 <div>
-                  <div className="flex items-center">
-                    <h3 className="font-bold text-gray-800">{item.agent?.name || 'Unknown Agent'}</h3>
-                    <span className={`ml-3 px-2 py-1 text-xs rounded-full ${
-                      item.status === 'Current' 
-                        ? 'bg-green-100 text-green-700' 
-                        : 'bg-gray-100 text-gray-700'
-                    }`}>
+                  <div className="profile-history-agent">
+                    <h3 className="profile-history-name">{item.agent?.name || 'Unknown Agent'}</h3>
+                    <span className={`profile-history-status ${item.status === 'Current' ? 'current' : 'past'}`}>
                       {item.status}
                     </span>
                   </div>
-                  <div className="flex items-center mt-2 text-sm text-gray-600">
-                    <Calendar size={14} className="mr-1" />
+                  <div className="profile-history-dates">
+                    <Calendar size={14} style={{ marginRight: '0.25rem' }} />
                     <span>
                       {format(new Date(item.assignment.startDate), 'MMM dd, yyyy')} 
                       {item.assignment.endDate 
@@ -220,22 +228,37 @@ export default function ShopProfile() {
                         : ' - Present'
                       }
                     </span>
-                    <span className="ml-3 text-xs bg-gray-100 px-2 py-1 rounded">
+                    <span className="profile-history-days">
                       {item.daysActive} days
                     </span>
                   </div>
                   {item.assignment.reason && (
-                    <p className="text-xs text-gray-600 mt-1 italic">Reason: {item.assignment.reason}</p>
+                    <p className="profile-history-reason">Reason: {item.assignment.reason}</p>
                   )}
                 </div>
-                <div className="text-right">
-                  <p className="text-2xl font-bold text-gray-800">{item.sales}</p>
-                  <p className="text-xs text-gray-600">devices sold</p>
-                  <p className="text-sm text-gray-600 mt-1">
+                <div className="profile-history-sales">
+                  <p className="profile-history-sales-val">{item.sales}</p>
+                  <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>devices sold</p>
+                  <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginTop: '0.25rem' }}>
                     {item.daysActive > 0 ? (item.sales / item.daysActive).toFixed(1) : '0'}/day
                   </p>
                 </div>
               </div>
+              
+              {/* Monthly Breakdown */}
+              {item.monthlySales.length > 0 && (
+                <div style={{ marginTop: '1rem', paddingTop: '1rem', borderTop: '1px solid var(--border-color)' }}>
+                  <h4 style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>Monthly Performance</h4>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(100px, 1fr))', gap: '0.5rem', maxHeight: '160px', overflowY: 'auto', paddingRight: '0.5rem', scrollbarWidth: 'thin' }}>
+                    {item.monthlySales.map(ms => (
+                      <div key={ms.month} style={{ backgroundColor: 'var(--bg-main)', padding: '0.5rem', borderRadius: '4px', textAlign: 'center' }}>
+                        <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>{ms.month}</p>
+                        <p style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--text-primary)' }}>{ms.sales}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           ))}
         </div>

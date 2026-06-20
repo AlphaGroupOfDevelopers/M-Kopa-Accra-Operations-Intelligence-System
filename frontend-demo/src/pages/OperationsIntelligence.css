@@ -1,0 +1,125 @@
+.op-grid-cols-2 {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .op-grid-cols-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.op-grid-cols-3 {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .op-grid-cols-3 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .op-grid-cols-3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.op-list-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem;
+  background-color: var(--bg-main);
+  border-radius: var(--radius-lg);
+  transition: background-color 0.2s ease;
+}
+
+.op-list-item:hover {
+  background-color: var(--bg-card-hover);
+}
+
+.op-alert-box {
+  padding: 1rem;
+  background-color: rgba(239, 68, 68, 0.05);
+  border: 1px solid rgba(239, 68, 68, 0.1);
+  border-radius: var(--radius-lg);
+}
+
+.op-alert-title {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.op-alert-sub {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin-top: 0.25rem;
+}
+
+.op-alert-msg {
+  font-size: 0.75rem;
+  color: var(--accent-red);
+  font-weight: 600;
+  margin-top: 0.5rem;
+}
+
+.op-transfer-box {
+  padding: 1rem;
+  background-color: var(--bg-main);
+  border-radius: var(--radius-lg);
+}
+
+.op-transfer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.op-transfer-stats {
+  margin-top: 0.75rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  font-size: 0.875rem;
+}
+
+.op-dependency-box {
+  padding: 1rem;
+  background-color: rgba(139, 92, 246, 0.05);
+  border-radius: var(--radius-lg);
+}
+
+.op-success-box {
+  padding: 1rem;
+  background-color: var(--accent-green-light);
+  border: 1px solid rgba(57, 181, 74, 0.2);
+  border-radius: var(--radius-lg);
+}
+
+.op-success-info {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background-color: rgba(59, 130, 246, 0.05);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  border-radius: var(--radius-lg);
+}
+
+.op-success-info-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--accent-blue);
+}
+
+.op-success-info-list {
+  margin-top: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}

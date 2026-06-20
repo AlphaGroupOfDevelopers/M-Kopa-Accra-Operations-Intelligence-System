@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { useApp } from '../context/AppContext';
 import { PlusCircle, CheckCircle } from 'lucide-react';
 import { format } from 'date-fns';
+import './Dashboard.css';
+import './DataEntry.css';
 
 export default function DataEntry() {
   const { agents, shops, addSalesRecord } = useApp();
@@ -45,30 +47,30 @@ export default function DataEntry() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold text-gray-800">Daily Sales Data Entry</h1>
-        <p className="text-gray-600 mt-1">Simulate agent sales report submission</p>
+    <div className="data-entry-container">
+      <div className="dashboard-header">
+        <h1 className="dashboard-title">Daily Sales Data Entry</h1>
+        <p className="dashboard-subtitle">Simulate agent sales report submission</p>
       </div>
 
       <div className="card">
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-          <p className="text-sm text-blue-800">
+        <div className="data-entry-notice">
+          <p className="data-entry-notice-text">
             <strong>Demo Mode:</strong> This form simulates the Google/Microsoft Forms that agents use to submit daily sales.
             Enter data here to see it immediately reflected in all dashboards and intelligence modules.
           </p>
         </div>
 
         {submitted ? (
-          <div className="text-center py-12">
-            <CheckCircle className="mx-auto text-green-600 mb-4" size={64} />
-            <h2 className="text-2xl font-bold text-gray-800 mb-2">Sales Report Submitted!</h2>
-            <p className="text-gray-600">Your data has been recorded and is now visible in all dashboards.</p>
+          <div className="data-entry-success">
+            <CheckCircle className="data-entry-success-icon" size={64} />
+            <h2 className="data-entry-success-title">Sales Report Submitted!</h2>
+            <p className="data-entry-success-text">Your data has been recorded and is now visible in all dashboards.</p>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div>
-              <label htmlFor="date" className="block text-sm font-medium text-gray-700 mb-2">
+          <form onSubmit={handleSubmit} className="data-entry-form">
+            <div className="form-group">
+              <label htmlFor="date" className="form-label">
                 Report Date
               </label>
               <input
@@ -76,20 +78,20 @@ export default function DataEntry() {
                 type="date"
                 value={formData.date}
                 onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                className="form-input"
                 required
               />
             </div>
 
-            <div>
-              <label htmlFor="agent" className="block text-sm font-medium text-gray-700 mb-2">
+            <div className="form-group">
+              <label htmlFor="agent" className="form-label">
                 Agent Name
               </label>
               <select
                 id="agent"
                 value={formData.agentId}
                 onChange={(e) => setFormData({ ...formData, agentId: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                className="form-input"
                 required
               >
                 <option value="">Select Agent</option>
@@ -102,18 +104,18 @@ export default function DataEntry() {
             </div>
 
             {selectedAgent && assignedShop && (
-              <div className="p-4 bg-gray-50 rounded-lg">
-                <p className="text-sm text-gray-600">
+              <div className="form-assigned-shop">
+                <p className="form-assigned-text">
                   <strong>Assigned Shop:</strong> {assignedShop.name}
                 </p>
-                <p className="text-sm text-gray-600">
+                <p className="form-assigned-text" style={{ marginBottom: 0 }}>
                   <strong>Location:</strong> {assignedShop.location}
                 </p>
               </div>
             )}
 
-            <div>
-              <label htmlFor="devicesSold" className="block text-sm font-medium text-gray-700 mb-2">
+            <div className="form-group">
+              <label htmlFor="devicesSold" className="form-label">
                 Number of Devices Sold
               </label>
               <input
@@ -122,35 +124,36 @@ export default function DataEntry() {
                 min="0"
                 value={formData.devicesSold}
                 onChange={(e) => setFormData({ ...formData, devicesSold: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                className="form-input"
                 placeholder="e.g., 5"
                 required
               />
             </div>
 
-            <div>
-              <label htmlFor="remarks" className="block text-sm font-medium text-gray-700 mb-2">
+            <div className="form-group">
+              <label htmlFor="remarks" className="form-label">
                 Remarks / Comments
               </label>
               <textarea
                 id="remarks"
                 value={formData.remarks}
                 onChange={(e) => setFormData({ ...formData, remarks: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                className="form-input"
                 rows={4}
                 placeholder="Enter any operational challenges, customer feedback, or notable observations..."
                 required
               />
-              <p className="text-xs text-gray-500 mt-1">
+              <p className="form-helper-text">
                 Examples: "Good day, all customers satisfied", "Stock shortage - ran out of devices by noon", "Heavy competition from nearby shop"
               </p>
             </div>
 
             <button
               type="submit"
-              className="w-full flex items-center justify-center btn-primary"
+              className="btn btn-primary"
+              style={{ width: '100%', justifyContent: 'center', marginTop: '0.5rem' }}
             >
-              <PlusCircle size={20} className="mr-2" />
+              <PlusCircle size={20} style={{ marginRight: '0.5rem' }} />
               Submit Sales Report
             </button>
           </form>
@@ -158,41 +161,47 @@ export default function DataEntry() {
       </div>
 
       <div className="card">
-        <h3 className="font-bold text-gray-800 mb-3">Sample Remarks for Testing</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <h3 className="card-title" style={{ marginBottom: '1rem' }}>Sample Remarks for Testing</h3>
+        <div className="sample-remarks-grid">
           <button
             onClick={() => setFormData({ ...formData, remarks: 'Good day, all customers were satisfied' })}
-            className="text-left p-3 bg-green-50 hover:bg-green-100 rounded-lg text-sm transition-colors"
+            className="sample-remark-btn positive"
+            type="button"
           >
             ✓ Positive day
           </button>
           <button
             onClick={() => setFormData({ ...formData, remarks: 'Stock shortage - ran out of devices by noon' })}
-            className="text-left p-3 bg-orange-50 hover:bg-orange-100 rounded-lg text-sm transition-colors"
+            className="sample-remark-btn warning"
+            type="button"
           >
             ⚠️ Stock shortage
           </button>
           <button
             onClick={() => setFormData({ ...formData, remarks: 'Transport delays affected morning sales' })}
-            className="text-left p-3 bg-orange-50 hover:bg-orange-100 rounded-lg text-sm transition-colors"
+            className="sample-remark-btn warning"
+            type="button"
           >
             ⚠️ Transport delays
           </button>
           <button
             onClick={() => setFormData({ ...formData, remarks: 'Network issues with payment system' })}
-            className="text-left p-3 bg-red-50 hover:bg-red-100 rounded-lg text-sm transition-colors"
+            className="sample-remark-btn negative"
+            type="button"
           >
             ❌ Network issues
           </button>
           <button
             onClick={() => setFormData({ ...formData, remarks: 'Heavy competition from nearby shop' })}
-            className="text-left p-3 bg-orange-50 hover:bg-orange-100 rounded-lg text-sm transition-colors"
+            className="sample-remark-btn warning"
+            type="button"
           >
             ⚠️ Competition
           </button>
           <button
             onClick={() => setFormData({ ...formData, remarks: 'Excellent foot traffic today, great customer referrals' })}
-            className="text-left p-3 bg-green-50 hover:bg-green-100 rounded-lg text-sm transition-colors"
+            className="sample-remark-btn positive"
+            type="button"
           >
             ✓ High traffic
           </button>

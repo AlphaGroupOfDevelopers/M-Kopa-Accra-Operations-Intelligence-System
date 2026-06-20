@@ -1,0 +1,139 @@
+.sales-momentum-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .sales-momentum-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.sales-momentum-value {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.sales-momentum-label {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin-top: 0.25rem;
+}
+
+.sales-momentum-footer {
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.sales-momentum-status {
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.sales-opp-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 1024px) {
+  .sales-opp-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.sales-shop-card {
+  padding: 0.75rem;
+  border-radius: var(--radius-lg);
+  margin-bottom: 0.75rem;
+}
+
+.sales-shop-card.growing {
+  background-color: var(--accent-green-light);
+}
+
+.sales-shop-card.declining {
+  background-color: rgba(239, 68, 68, 0.05);
+}
+
+.sales-shop-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.sales-shop-name {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.sales-shop-location {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.sales-shop-growth {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.sales-shop-growth-label {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  text-align: right;
+}
+
+.sales-shop-footer {
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.sales-ranking-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.sales-ranking-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem;
+  background-color: var(--bg-main);
+  border-radius: var(--radius-lg);
+}
+
+.sales-ranking-rank {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 0.75rem;
+  font-weight: 700;
+}
+
+.rank-first {
+  background-color: var(--accent-yellow);
+  color: #fff;
+}
+
+.rank-second {
+  background-color: var(--text-muted);
+  color: #fff;
+}
+
+.rank-third {
+  background-color: var(--accent-orange);
+  color: #fff;
+}
+
+.rank-other {
+  background-color: var(--border-color);
+  color: var(--text-secondary);
+}

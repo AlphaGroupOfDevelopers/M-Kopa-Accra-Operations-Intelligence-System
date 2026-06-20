@@ -1,0 +1,117 @@
+.more-menu-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.more-menu-header {
+  padding: 1rem 0;
+  margin-bottom: 1rem;
+}
+
+.more-menu-title {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+}
+
+.more-menu-profile {
+  display: flex;
+  align-items: center;
+  padding: 1.25rem;
+  background-color: var(--bg-card);
+  border-radius: var(--radius-lg);
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.profile-avatar {
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent-green), #1F3E35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  margin-right: 1rem;
+}
+
+.profile-info h2 {
+  font-size: 1.25rem;
+  margin-bottom: 0.25rem;
+  color: var(--text-primary);
+}
+
+.profile-info p {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+}
+
+.more-menu-list {
+  background-color: var(--bg-card);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 2rem;
+}
+
+.more-menu-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem;
+  border-bottom: 1px solid var(--border-color);
+  transition: background-color 0.2s ease;
+}
+
+.more-menu-item:last-child {
+  border-bottom: none;
+}
+
+.more-menu-item:active,
+.more-menu-item:hover {
+  background-color: var(--bg-card-hover);
+}
+
+.more-menu-item-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.more-menu-icon {
+  color: var(--text-secondary);
+}
+
+.more-menu-chevron {
+  color: var(--text-muted);
+}
+
+.more-menu-actions {
+  margin-top: auto;
+}
+
+.more-menu-logout {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1.25rem;
+  background-color: var(--bg-card);
+  color: var(--accent-red);
+  border-radius: var(--radius-lg);
+  font-weight: 600;
+  font-size: 1rem;
+  box-shadow: var(--shadow-sm);
+  transition: background-color 0.2s ease;
+}
+
+.more-menu-logout:active,
+.more-menu-logout:hover {
+  background-color: rgba(239, 68, 68, 0.05);
+}

@@ -1,0 +1,155 @@
+.login-native-container {
+  min-height: 100vh;
+  background-color: var(--bg-main);
+  display: flex;
+  flex-direction: column;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+.login-native-topbar {
+  display: flex;
+  align-items: center;
+  padding: 1rem 1.25rem;
+  background-color: var(--bg-card);
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.login-native-back {
+  color: var(--accent-green);
+  margin-right: 1rem;
+}
+
+.login-native-top-title {
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+
+.login-native-content {
+  flex: 1;
+  padding: 2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  max-width: 480px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.login-native-logo-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2.5rem;
+  margin-top: 1rem;
+}
+
+.login-native-logo {
+  height: 48px;
+  width: auto;
+  object-fit: contain;
+}
+
+.login-native-heading {
+  color: var(--text-primary);
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  margin-bottom: 2rem;
+}
+
+.login-native-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.login-native-input-group {
+  position: relative;
+  margin-top: 0.5rem;
+}
+
+.login-native-label {
+  position: absolute;
+  top: -0.5rem;
+  left: 1rem;
+  background-color: var(--bg-main);
+  padding: 0 0.25rem;
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  z-index: 1;
+}
+
+.login-native-input {
+  width: 100%;
+  background-color: transparent;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  color: var(--text-primary);
+  font-size: 1rem;
+  transition: border-color 0.2s ease;
+}
+
+.login-native-input:focus {
+  outline: none;
+  border-color: var(--accent-green);
+}
+
+.login-native-input::placeholder {
+  color: var(--text-muted);
+}
+
+.login-native-eye-btn {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-native-error {
+  color: var(--accent-red);
+  font-size: 0.875rem;
+  text-align: center;
+}
+
+.login-native-submit {
+  width: 100%;
+  background-color: var(--accent-green);
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 1rem;
+  padding: 1rem;
+  border-radius: 8px;
+  border: none;
+  margin-top: 1rem;
+  cursor: pointer;
+  letter-spacing: 0.02em;
+}
+
+.login-native-submit:active {
+  background-color: var(--accent-green-hover);
+}
+
+.login-native-footer {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.login-native-forgot {
+  color: var(--accent-green);
+  background: none;
+  border: none;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+}

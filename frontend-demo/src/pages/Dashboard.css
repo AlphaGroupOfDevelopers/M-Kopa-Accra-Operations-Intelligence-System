@@ -1,0 +1,249 @@
+.dashboard-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.dashboard-header {
+  margin-bottom: 1rem;
+}
+
+.dashboard-title {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+}
+
+.dashboard-subtitle {
+  color: var(--text-secondary);
+  margin-top: 0.25rem;
+}
+
+/* Metrics Grid */
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+}
+
+@media (min-width: 768px) {
+  .metrics-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+  }
+}
+
+.metric-card {
+  /* Inherits from .card */
+}
+
+.metric-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.metric-label {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.metric-value {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-top: 0.5rem;
+  line-height: 1.1;
+}
+
+@media (min-width: 768px) {
+  .metric-value {
+    font-size: 2rem;
+  }
+}
+
+.metric-icon-wrapper {
+  padding: 0.5rem;
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.metric-icon-wrapper svg {
+  width: 18px;
+  height: 18px;
+}
+
+@media (min-width: 768px) {
+  .metric-icon-wrapper {
+    padding: 0.75rem;
+  }
+  .metric-icon-wrapper svg {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+.icon-green {
+  background-color: var(--accent-green-light);
+  color: var(--accent-green);
+}
+
+.icon-red {
+  background-color: rgba(239, 68, 68, 0.1);
+  color: var(--accent-red);
+}
+
+.icon-blue {
+  background-color: rgba(59, 130, 246, 0.1);
+  color: var(--accent-blue);
+}
+
+.icon-purple {
+  background-color: rgba(139, 92, 246, 0.1);
+  color: var(--accent-purple);
+}
+
+.icon-orange {
+  background-color: rgba(249, 115, 22, 0.1);
+  color: var(--accent-orange);
+}
+
+.metric-trend {
+  font-size: 0.875rem;
+  margin-top: 1rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.trend-positive { color: var(--accent-green); }
+.trend-negative { color: var(--accent-red); }
+.trend-neutral { color: var(--text-secondary); }
+
+/* Chart Area */
+.chart-container {
+  width: 100%;
+  min-width: 600px;
+  height: 350px;
+  margin-top: 1rem;
+}
+
+/* Rankings Grid */
+.rankings-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+}
+
+@media (min-width: 1024px) {
+  .rankings-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+}
+
+.ranking-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.ranking-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.ranking-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.ranking-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-lg);
+  background-color: var(--bg-card);
+  transition: background-color 0.2s ease;
+}
+
+.ranking-item:hover {
+  background-color: var(--bg-card-hover);
+}
+
+.ranking-item-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.rank-badge {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.875rem;
+}
+
+.rank-1 { background-color: rgba(234, 179, 8, 0.15); color: var(--accent-yellow); }
+.rank-2 { background-color: var(--bg-main); color: var(--text-secondary); }
+.rank-3 { background-color: rgba(249, 115, 22, 0.15); color: var(--accent-orange); }
+.rank-other { background-color: transparent; color: var(--text-muted); }
+
+.ranking-name {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.ranking-sub {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.ranking-item-right {
+  text-align: right;
+}
+
+.ranking-score {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.ranking-score-label {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+@media (max-width: 1023px) {
+  .ranking-list .ranking-item:nth-child(n+4) {
+    display: none;
+  }
+  .see-more-link {
+    display: block;
+    text-align: center;
+    margin-top: 1rem;
+    padding-top: 0.75rem;
+    color: var(--accent-blue);
+    font-weight: 500;
+    text-decoration: none;
+    border-top: 1px solid var(--border-color);
+  }
+}
+@media (min-width: 1024px) {
+  .see-more-link {
+    display: none;
+  }
+}

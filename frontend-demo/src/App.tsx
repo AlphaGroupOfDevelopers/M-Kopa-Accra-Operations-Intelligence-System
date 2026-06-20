@@ -7,10 +7,14 @@ import TeamMembers from './pages/TeamMembers';
 import TeamMemberProfile from './pages/TeamMemberProfile';
 import Shops from './pages/Shops';
 import ShopProfile from './pages/ShopProfile';
-import SalesIntelligence from './pages/SalesIntelligence';
+import PerformanceIntelligence from './pages/PerformanceIntelligence';
 import OperationsIntelligence from './pages/OperationsIntelligence';
 import ExecutiveDashboard from './pages/ExecutiveDashboard';
 import DataEntry from './pages/DataEntry';
+import MoreMenu from './pages/MoreMenu';
+
+import PredictiveIntelligence from './pages/PredictiveIntelligence';
+import DecisionIntelligence from './pages/DecisionIntelligence';
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated } = useApp();
@@ -35,10 +39,13 @@ function AppRoutes() {
           <Route path="team-members/:agentId" element={<TeamMemberProfile />} />
           <Route path="shops" element={<Shops />} />
           <Route path="shops/:shopId" element={<ShopProfile />} />
-          <Route path="sales-intelligence" element={<SalesIntelligence />} />
           <Route path="operations-intelligence" element={<OperationsIntelligence />} />
+          <Route path="performance-intelligence" element={<PerformanceIntelligence />} />
+          <Route path="predictive-intelligence" element={<PredictiveIntelligence />} />
+          <Route path="decision-intelligence" element={<DecisionIntelligence />} />
           <Route path="executive" element={<ExecutiveDashboard />} />
           <Route path="data-entry" element={<DataEntry />} />
+          <Route path="more" element={<MoreMenu />} />
         </Route>
       </Routes>
     </BrowserRouter>

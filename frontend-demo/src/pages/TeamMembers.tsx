@@ -3,6 +3,9 @@ import { useApp } from '../context/AppContext';
 import { Link } from 'react-router-dom';
 import { Search, Users, Mail, Phone } from 'lucide-react';
 import { subDays, format } from 'date-fns';
+import './Dashboard.css';
+import './Shops.css'; // For shops-grid, search classes
+import './TeamMembers.css';
 
 export default function TeamMembers() {
   const { agents, salesRecords, shops } = useApp();
@@ -34,77 +37,75 @@ export default function TeamMembers() {
   );
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
+    <div className="dashboard-container">
+      <div className="dashboard-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
-          <h1 className="text-3xl font-bold text-gray-800">Team Members</h1>
-          <p className="text-gray-600 mt-1">Manage and view agent profiles and performance</p>
+          <h1 className="dashboard-title">Team Members</h1>
+          <p className="dashboard-subtitle">Manage and view agent profiles and performance</p>
         </div>
-        <div className="flex items-center bg-blue-50 px-4 py-2 rounded-lg">
-          <Users className="text-blue-600 mr-2" size={20} />
-          <span className="text-blue-800 font-semibold">{agents.length} Active Agents</span>
+        <div className="team-header-actions">
+          <Users size={20} style={{ marginRight: '0.5rem' }} />
+          <span>{agents.length} Active Agents</span>
         </div>
       </div>
 
       {/* Search */}
       <div className="card">
-        <div className="relative">
-          <Search className="absolute left-3 top-3 text-gray-400" size={20} />
+        <div className="shops-search-wrapper">
+          <Search className="shops-search-icon" size={20} />
           <input
             type="text"
             placeholder="Search by name, email, or shop..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+            className="shops-search-input"
           />
         </div>
       </div>
 
       {/* Agents Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="shops-grid">
         {filteredAgents.map(agent => (
-          <Link key={agent.id} to={`/team-members/${agent.id}`}>
-            <div className="card hover:shadow-lg transition-shadow cursor-pointer">
-              <div className="flex items-start justify-between mb-4">
-                <div className="flex items-center">
-                  <div className="w-12 h-12 bg-gradient-to-br from-[#39B54A] to-[#1F3E35] rounded-full flex items-center justify-center text-white font-bold text-lg">
+          <Link key={agent.id} to={`/team-members/${agent.id}`} style={{ textDecoration: 'none' }}>
+            <div className="card team-agent-card">
+              <div className="team-agent-header">
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <div className="team-agent-avatar">
                     {agent.name.split(' ').map(n => n[0]).join('')}
                   </div>
-                  <div className="ml-3">
-                    <h3 className="font-bold text-gray-800">{agent.name}</h3>
-                    <p className="text-sm text-gray-600">{agent.currentShopName}</p>
+                  <div className="team-agent-info">
+                    <h3 className="team-agent-name">{agent.name}</h3>
+                    <p className="team-agent-shop">{agent.currentShopName}</p>
                   </div>
                 </div>
-                <span className={`px-2 py-1 text-xs rounded-full ${
-                  agent.status === 'active' 
-                    ? 'bg-green-100 text-green-700' 
-                    : 'bg-gray-100 text-gray-700'
-                }`}>
+                <span className={`shop-status-badge ${agent.status === 'active' ? 'active' : 'inactive'}`}>
                   {agent.status}
                 </span>
               </div>
 
-              <div className="space-y-2 mb-4">
-                <div className="flex items-center text-sm text-gray-600">
-                  <Mail size={14} className="mr-2" />
+              <div className="team-agent-details">
+                <div className="team-agent-detail-item">
+                  <Mail size={14} style={{ marginRight: '0.5rem' }} />
                   {agent.email}
                 </div>
-                <div className="flex items-center text-sm text-gray-600">
-                  <Phone size={14} className="mr-2" />
+                <div className="team-agent-detail-item">
+                  <Phone size={14} style={{ marginRight: '0.5rem' }} />
                   {agent.phone}
+                </div>
+                <div className="team-agent-detail-item" style={{ width: '100%', marginTop: '0.25rem' }}>
+                  <span style={{ marginRight: '0.5rem' }}>🎂</span>
+                  Born {format(new Date(agent.dateOfBirth), 'MMM dd, yyyy')}
                 </div>
               </div>
 
-              <div className="border-t pt-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <p className="text-xs text-gray-600">30-Day Sales</p>
-                    <p className="text-xl font-bold text-gray-800">{agent.totalSales}</p>
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-600">Daily Avg</p>
-                    <p className="text-xl font-bold text-gray-800">{agent.avgDailySales}</p>
-                  </div>
+              <div className="team-agent-stats">
+                <div>
+                  <p className="shop-stat-label">30-Day Sales</p>
+                  <p className="shop-stat-value">{agent.totalSales}</p>
+                </div>
+                <div>
+                  <p className="shop-stat-label">Daily Avg</p>
+                  <p className="shop-stat-value">{agent.avgDailySales}</p>
                 </div>
               </div>
             </div>
@@ -113,9 +114,9 @@ export default function TeamMembers() {
       </div>
 
       {filteredAgents.length === 0 && (
-        <div className="card text-center py-12">
-          <Users className="mx-auto text-gray-400 mb-4" size={48} />
-          <p className="text-gray-600">No agents found matching your search</p>
+        <div className="card team-empty-state">
+          <Users className="team-empty-icon" size={48} />
+          <p className="team-empty-text">No agents found matching your search</p>
         </div>
       )}
     </div>

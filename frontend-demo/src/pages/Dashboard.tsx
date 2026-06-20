@@ -2,8 +2,9 @@ import { useMemo } from 'react';
 import { useApp } from '../context/AppContext';
 import { format, subDays } from 'date-fns';
 import { TrendingUp, TrendingDown, Users, AlertTriangle, Award } from 'lucide-react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Area, AreaChart } from 'recharts';
 import { Link } from 'react-router-dom';
+import './Dashboard.css';
 
 export default function Dashboard() {
   const { salesRecords, agents, shops } = useApp();
@@ -87,158 +88,176 @@ export default function Dashboard() {
     };
   }, [salesRecords, agents, shops]);
 
+  // Read theme variable if needed, but CSS handles dark mode variables
+  // Area gradient for Recharts
+  const chartGradient = (
+    <defs>
+      <linearGradient id="colorSales" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="5%" stopColor="var(--accent-green)" stopOpacity={0.3}/>
+        <stop offset="95%" stopColor="var(--accent-green)" stopOpacity={0}/>
+      </linearGradient>
+    </defs>
+  );
+
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold text-gray-800">Performance Dashboard</h1>
-        <p className="text-gray-600 mt-1">Real-time overview of sales and operations</p>
+    <div className="dashboard-container">
+      <div className="dashboard-header">
+        <h1 className="dashboard-title">Performance Dashboard</h1>
+        <p className="dashboard-subtitle">Real-time overview of sales and operations</p>
       </div>
 
       {/* Key Metrics */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="card">
-          <div className="flex items-center justify-between">
+      <div className="metrics-grid">
+        <div className="card metric-card">
+          <div className="metric-header">
             <div>
-              <p className="text-sm text-gray-600">Today's Sales</p>
-              <p className="text-3xl font-bold text-gray-800 mt-1">{stats.todaySales}</p>
+              <p className="metric-label">Today's Sales</p>
+              <p className="metric-value">{stats.todaySales}</p>
             </div>
-            <div className={`p-3 rounded-full ${stats.growthRate >= 0 ? 'bg-green-100' : 'bg-red-100'}`}>
-              {stats.growthRate >= 0 ? (
-                <TrendingUp className="text-green-600" size={24} />
-              ) : (
-                <TrendingDown className="text-red-600" size={24} />
-              )}
+            <div className={`metric-icon-wrapper ${stats.growthRate >= 0 ? 'icon-green' : 'icon-red'}`}>
+              {stats.growthRate >= 0 ? <TrendingUp size={24} /> : <TrendingDown size={24} />}
             </div>
           </div>
-          <p className={`text-sm mt-2 ${stats.growthRate >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+          <p className={`metric-trend ${stats.growthRate >= 0 ? 'trend-positive' : 'trend-negative'}`}>
             {stats.growthRate >= 0 ? '+' : ''}{stats.growthRate.toFixed(1)}% from yesterday
           </p>
         </div>
 
-        <div className="card">
-          <div className="flex items-center justify-between">
+        <div className="card metric-card">
+          <div className="metric-header">
             <div>
-              <p className="text-sm text-gray-600">Last 7 Days</p>
-              <p className="text-3xl font-bold text-gray-800 mt-1">{stats.last7DaysSales}</p>
+              <p className="metric-label">Last 7 Days</p>
+              <p className="metric-value">{stats.last7DaysSales}</p>
             </div>
-            <div className="p-3 rounded-full bg-blue-100">
-              <TrendingUp size={24} className="text-blue-600" />
+            <div className="metric-icon-wrapper icon-blue">
+              <TrendingUp size={24} />
             </div>
           </div>
-          <p className="text-sm text-gray-600 mt-2">
+          <p className="metric-trend trend-neutral">
             Avg: {(stats.last7DaysSales / 7).toFixed(1)} devices/day
           </p>
         </div>
 
-        <div className="card">
-          <div className="flex items-center justify-between">
+        <div className="card metric-card">
+          <div className="metric-header">
             <div>
-              <p className="text-sm text-gray-600">Active Agents</p>
-              <p className="text-3xl font-bold text-gray-800 mt-1">{agents.length}</p>
+              <p className="metric-label">Active Agents</p>
+              <p className="metric-value">{agents.length}</p>
             </div>
-            <div className="p-3 rounded-full bg-purple-100">
-              <Users className="text-purple-600" size={24} />
+            <div className="metric-icon-wrapper icon-purple">
+              <Users size={24} />
             </div>
           </div>
-          <p className="text-sm text-gray-600 mt-2">Across {shops.length} shops</p>
+          <p className="metric-trend trend-neutral">Across {shops.length} shops</p>
         </div>
 
-        <div className="card">
-          <div className="flex items-center justify-between">
+        <div className="card metric-card">
+          <div className="metric-header">
             <div>
-              <p className="text-sm text-gray-600">Silent Shops</p>
-              <p className="text-3xl font-bold text-gray-800 mt-1">{stats.silentShops.length}</p>
+              <p className="metric-label">Silent Shops</p>
+              <p className="metric-value">{stats.silentShops.length}</p>
             </div>
-            <div className="p-3 rounded-full bg-orange-100">
-              <AlertTriangle className="text-orange-600" size={24} />
+            <div className="metric-icon-wrapper icon-orange">
+              <AlertTriangle size={24} />
             </div>
           </div>
-          <p className="text-sm text-gray-600 mt-2">No reports today</p>
+          <p className="metric-trend trend-neutral">No reports today</p>
         </div>
       </div>
 
       {/* Sales Trend Chart */}
       <div className="card">
-        <h2 className="text-xl font-bold text-gray-800 mb-4">14-Day Sales Trend</h2>
-        <ResponsiveContainer width="100%" height={300}>
-          <LineChart data={stats.trendData}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="date" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Line type="monotone" dataKey="sales" stroke="#39B54A" strokeWidth={2} name="Devices Sold" />
-          </LineChart>
-        </ResponsiveContainer>
+        <h2 className="card-title">14-Day Sales Trend</h2>
+        <div className="scrollable-container">
+          <div className="chart-container">
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={stats.trendData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                {chartGradient}
+                <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                <XAxis dataKey="date" axisLine={false} tickLine={false} dy={10} />
+                <YAxis axisLine={false} tickLine={false} />
+                <Tooltip />
+                <Area 
+                  type="monotone" 
+                  dataKey="sales" 
+                  stroke="var(--accent-green)" 
+                  strokeWidth={3} 
+                  fillOpacity={1} 
+                  fill="url(#colorSales)" 
+                />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
       </div>
 
       {/* Shop Rankings */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="rankings-grid">
         <div className="card">
-          <div className="flex items-center mb-4">
-            <Award className="text-yellow-500 mr-2" size={24} />
-            <h2 className="text-xl font-bold text-gray-800">Top Performing Shops (7 Days)</h2>
+          <div className="ranking-header">
+            <div className="metric-icon-wrapper icon-orange" style={{ padding: '0.5rem' }}>
+              <Award size={20} />
+            </div>
+            <h2 className="ranking-title">Top Shops (7 Days)</h2>
           </div>
-          <div className="space-y-3">
+          <div className="ranking-list">
             {stats.shopPerformance.slice(0, 5).map((item, index) => (
-              <Link key={item.shop.id} to={`/shops/${item.shop.id}`}>
-                <div className="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg transition-colors cursor-pointer">
-                  <div className="flex items-center">
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center mr-3 ${
-                      index === 0 ? 'bg-yellow-100 text-yellow-700' :
-                      index === 1 ? 'bg-gray-100 text-gray-700' :
-                      index === 2 ? 'bg-orange-100 text-orange-700' :
-                      'bg-gray-50 text-gray-600'
-                    } font-bold`}>
-                      {index + 1}
-                    </div>
-                    <div>
-                      <p className="font-semibold text-gray-800">{item.shop.name}</p>
-                      <p className="text-sm text-gray-600">{item.shop.location}</p>
-                    </div>
+              <Link key={item.shop.id} to={`/shops/${item.shop.id}`} className="ranking-item">
+                <div className="ranking-item-left">
+                  <div className={`rank-badge ${
+                    index === 0 ? 'rank-1' :
+                    index === 1 ? 'rank-2' :
+                    index === 2 ? 'rank-3' : 'rank-other'
+                  }`}>
+                    {index + 1}
                   </div>
-                  <div className="text-right">
-                    <p className="text-lg font-bold text-gray-800">{item.sales}</p>
-                    <p className="text-xs text-gray-600">devices</p>
+                  <div>
+                    <p className="ranking-name">{item.shop.name}</p>
+                    <p className="ranking-sub">{item.shop.location}</p>
                   </div>
+                </div>
+                <div className="ranking-item-right">
+                  <p className="ranking-score">{item.sales}</p>
+                  <p className="ranking-score-label">devices</p>
                 </div>
               </Link>
             ))}
           </div>
+          <Link to="/shops" className="see-more-link">See All Shops</Link>
         </div>
 
         {/* Agent Rankings */}
         <div className="card">
-          <div className="flex items-center mb-4">
-            <Users className="text-blue-500 mr-2" size={24} />
-            <h2 className="text-xl font-bold text-gray-800">Top Performing Agents (7 Days)</h2>
+          <div className="ranking-header">
+            <div className="metric-icon-wrapper icon-blue" style={{ padding: '0.5rem' }}>
+              <Users size={20} />
+            </div>
+            <h2 className="ranking-title">Top Agents (7 Days)</h2>
           </div>
-          <div className="space-y-3">
+          <div className="ranking-list">
             {stats.agentPerformance.slice(0, 5).map((item, index) => (
-              <Link key={item.agent.id} to={`/team-members/${item.agent.id}`}>
-                <div className="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg transition-colors cursor-pointer">
-                  <div className="flex items-center">
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center mr-3 ${
-                      index === 0 ? 'bg-yellow-100 text-yellow-700' :
-                      index === 1 ? 'bg-gray-100 text-gray-700' :
-                      index === 2 ? 'bg-orange-100 text-orange-700' :
-                      'bg-gray-50 text-gray-600'
-                    } font-bold`}>
-                      {index + 1}
-                    </div>
-                    <div>
-                      <p className="font-semibold text-gray-800">{item.agent.name}</p>
-                      <p className="text-sm text-gray-600">{item.agent.email}</p>
-                    </div>
+              <Link key={item.agent.id} to={`/team-members/${item.agent.id}`} className="ranking-item">
+                <div className="ranking-item-left">
+                  <div className={`rank-badge ${
+                    index === 0 ? 'rank-1' :
+                    index === 1 ? 'rank-2' :
+                    index === 2 ? 'rank-3' : 'rank-other'
+                  }`}>
+                    {index + 1}
                   </div>
-                  <div className="text-right">
-                    <p className="text-lg font-bold text-gray-800">{item.sales}</p>
-                    <p className="text-xs text-gray-600">devices</p>
+                  <div>
+                    <p className="ranking-name">{item.agent.name}</p>
+                    <p className="ranking-sub">{item.agent.email}</p>
                   </div>
+                </div>
+                <div className="ranking-item-right">
+                  <p className="ranking-score">{item.sales}</p>
+                  <p className="ranking-score-label">devices</p>
                 </div>
               </Link>
             ))}
           </div>
+          <Link to="/team-members" className="see-more-link">See All Agents</Link>
         </div>
       </div>
     </div>
