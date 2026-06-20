@@ -19,15 +19,15 @@ export const shops: Shop[] = [
 
 // Agents Data (9 Agents, @gmail.com emails, with explicit Birthdays)
 export const agents: Agent[] = [
-  { id: 'agent1', name: 'Kwame Mensah', email: 'kwame.mensah@gmail.com', phone: '+233244123456', dateOfBirth: '1995-03-15', education: 'HND Marketing', employmentDate: '2022-01-10', currentShopId: 'shop1', status: 'active', role: 'main' },
-  { id: 'agent2', name: 'Ama Darko', email: 'ama.darko@gmail.com', phone: '+233244234567', dateOfBirth: '1993-07-22', education: 'BSc Business Admin', employmentDate: '2021-06-15', currentShopId: 'shop1', status: 'active', role: 'assistant' },
-  { id: 'agent3', name: 'Kofi Asante', email: 'kofi.asante@gmail.com', phone: '+233244345678', dateOfBirth: '1996-11-08', education: 'Diploma Sales', employmentDate: '2022-09-01', currentShopId: 'shop2', status: 'active', role: 'main' },
-  { id: 'agent4', name: 'Akua Boateng', email: 'akua.boateng@gmail.com', phone: '+233244456789', dateOfBirth: '1994-05-19', education: 'HND Marketing', employmentDate: '2021-11-20', currentShopId: 'shop2', status: 'active', role: 'assistant' },
-  { id: 'agent5', name: 'Yaw Agyeman', email: 'yaw.agyeman@gmail.com', phone: '+233244567890', dateOfBirth: '1997-02-14', education: 'BSc Economics', employmentDate: '2023-01-05', currentShopId: 'shop3', status: 'active', role: 'main' },
-  { id: 'agent6', name: 'Abena Osei', email: 'abena.osei@gmail.com', phone: '+233244678901', dateOfBirth: '1995-09-30', education: 'HND Business', employmentDate: '2022-04-12', currentShopId: 'shop4', status: 'active', role: 'main' },
-  { id: 'agent7', name: 'Kwesi Owusu', email: 'kwesi.owusu@gmail.com', phone: '+233244789012', dateOfBirth: '1996-06-25', education: 'Diploma Marketing', employmentDate: '2022-08-18', currentShopId: 'shop5', status: 'active', role: 'main' },
-  { id: 'agent8', name: 'Efua Addai', email: 'efua.addai@gmail.com', phone: '+233244890123', dateOfBirth: '1994-12-03', education: 'BSc Marketing', employmentDate: '2021-03-22', currentShopId: 'shop6', status: 'active', role: 'main' },
-  { id: 'agent9', name: 'Kojo Mensah', email: 'kojo.mensah@gmail.com', phone: '+233244901234', dateOfBirth: '1998-01-17', education: 'HND Sales', employmentDate: '2023-02-15', currentShopId: 'shop7', status: 'active', role: 'main' },
+  { id: 'agent1', name: 'Kwame Mensah', email: 'kwame.mensah@gmail.com', phone: '+233244123456', dateOfBirth: '1995-03-15', education: 'HND Marketing', employmentDate: '2022-01-10', currentShopId: 'shop1', status: 'active', role: 'main', digitalAddress: 'GA-123-4567' },
+  { id: 'agent2', name: 'Ama Darko', email: 'ama.darko@gmail.com', phone: '+233244234567', dateOfBirth: '1993-07-22', education: 'BSc Business Admin', employmentDate: '2021-06-15', currentShopId: 'shop1', status: 'active', role: 'assistant', digitalAddress: 'GA-234-5678' },
+  { id: 'agent3', name: 'Kofi Asante', email: 'kofi.asante@gmail.com', phone: '+233244345678', dateOfBirth: '1996-11-08', education: 'Diploma Sales', employmentDate: '2022-09-01', currentShopId: 'shop2', status: 'active', role: 'main', digitalAddress: 'GA-345-6789' },
+  { id: 'agent4', name: 'Akua Boateng', email: 'akua.boateng@gmail.com', phone: '+233244456789', dateOfBirth: '1994-05-19', education: 'HND Marketing', employmentDate: '2021-11-20', currentShopId: 'shop2', status: 'active', role: 'assistant', digitalAddress: 'GA-456-7890' },
+  { id: 'agent5', name: 'Yaw Agyeman', email: 'yaw.agyeman@gmail.com', phone: '+233244567890', dateOfBirth: '1997-02-14', education: 'BSc Economics', employmentDate: '2023-01-05', currentShopId: 'shop3', status: 'active', role: 'main', digitalAddress: 'GA-567-8901' },
+  { id: 'agent6', name: 'Abena Osei', email: 'abena.osei@gmail.com', phone: '+233244678901', dateOfBirth: '1995-09-30', education: 'HND Business', employmentDate: '2022-04-12', currentShopId: 'shop4', status: 'active', role: 'main', digitalAddress: 'GA-678-9012' },
+  { id: 'agent7', name: 'Kwesi Owusu', email: 'kwesi.owusu@gmail.com', phone: '+233244789012', dateOfBirth: '1996-06-25', education: 'Diploma Marketing', employmentDate: '2022-08-18', currentShopId: 'shop5', status: 'active', role: 'main', digitalAddress: 'GA-789-0123' },
+  { id: 'agent8', name: 'Efua Addai', email: 'efua.addai@gmail.com', phone: '+233244890123', dateOfBirth: '1994-12-03', education: 'BSc Marketing', employmentDate: '2021-03-22', currentShopId: 'shop6', status: 'active', role: 'main', digitalAddress: 'GA-890-1234' },
+  { id: 'agent9', name: 'Kojo Mensah', email: 'kojo.mensah@gmail.com', phone: '+233244901234', dateOfBirth: '1998-01-17', education: 'HND Sales', employmentDate: '2023-02-15', currentShopId: 'shop7', status: 'active', role: 'main', digitalAddress: 'GA-901-2345' },
 ];
 
 // Generate Assignments with Transfer History (Markov Chains simulation requires historical pathways)
@@ -59,7 +59,7 @@ const remarksPool = [
   
   // Cluster: Stock / Availability
   'We completely ran out of the new smartphone models by noon. Stock shortage is killing sales!',
-  'Had to turn away 5 customers because we don\'t have the required devices in stock. Please restock urgently.',
+  'Had to turn away 5 customers because we don\'t have the required phones in stock. Please restock urgently.',
   'Inventory delays meant we had empty shelves for the most popular devices today.',
   
   // Cluster: Network / System / Registration
@@ -75,7 +75,7 @@ const remarksPool = [
   // Cluster: Positive / Standard
   'Incredible day! Walk-in traffic was consistently high and customers were very eager to buy.',
   'Smooth operations today, all systems working perfectly and sales targets met easily.',
-  'Great energy in the shop today. We successfully up-sold several customers to higher tier devices.',
+  'Great energy in the shop today. We successfully up-sold several customers to higher tier phones.',
 ];
 
 // Generate Sales Records for the last 6 months

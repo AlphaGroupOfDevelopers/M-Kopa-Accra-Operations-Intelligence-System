@@ -13,7 +13,6 @@ import ExecutiveDashboard from './pages/ExecutiveDashboard';
 import DataEntry from './pages/DataEntry';
 import MoreMenu from './pages/MoreMenu';
 
-import PredictiveIntelligence from './pages/PredictiveIntelligence';
 import DecisionIntelligence from './pages/DecisionIntelligence';
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
@@ -41,7 +40,6 @@ function AppRoutes() {
           <Route path="shops/:shopId" element={<ShopProfile />} />
           <Route path="operations-intelligence" element={<OperationsIntelligence />} />
           <Route path="performance-intelligence" element={<PerformanceIntelligence />} />
-          <Route path="predictive-intelligence" element={<PredictiveIntelligence />} />
           <Route path="decision-intelligence" element={<DecisionIntelligence />} />
           <Route path="executive" element={<ExecutiveDashboard />} />
           <Route path="data-entry" element={<DataEntry />} />

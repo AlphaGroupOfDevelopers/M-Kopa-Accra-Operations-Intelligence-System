@@ -1,14 +1,13 @@
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { useApp } from '../context/AppContext';
 import { GitMerge, Brain, ArrowRight, TrendingUp } from 'lucide-react';
-import { calculateFinancialImpact, calculateAEC } from '../utils/intelligenceMath';
+import { calculateAEC } from '../utils/intelligenceMath';
 import { format, subDays } from 'date-fns';
 import './Dashboard.css';
 import './DecisionIntelligence.css';
 
 export default function DecisionIntelligence() {
   const { salesRecords, shops, agents } = useApp();
-  const [marginPerDevice, setMarginPerDevice] = useState(300);
 
   const decisions = useMemo(() => {
     const last30Days = format(subDays(new Date(), 30), 'yyyy-MM-dd');
@@ -26,7 +25,7 @@ export default function DecisionIntelligence() {
       const currentShop = shops.find(s => s.id === agent.currentShopId);
       const expectedPotential = (currentShop?.baseTraffic || 1) * 60;
       const aec = calculateAEC(sales, expectedPotential);
-      return { agent, currentShop, sales, aec };
+      return { agent, currentShop, sales, expectedPotential, aec };
     });
 
     // 2. Identify Transfer Opportunities (Hungarian Algorithm Mock / Greedy Match)
@@ -53,16 +52,14 @@ export default function DecisionIntelligence() {
         const newExpectedSales = agent.aec * targetShop.expectedPotential;
         const variance = newExpectedSales - currentExpected;
         
-        const financialImpact = calculateFinancialImpact(variance, marginPerDevice);
-
-        if (financialImpact > 0) {
+        if (variance > 0) {
           recommendedTransfers.push({
             agent: agent.agent,
             fromShop: agent.currentShop,
             toShop: targetShop.shop,
-            aec: agent.aec,
-            projectedLift: variance,
-            financialImpact
+            currentSales: agent.sales,
+            expectedSales: agent.expectedPotential,
+            projectedLift: variance
           });
         }
       }
@@ -71,7 +68,7 @@ export default function DecisionIntelligence() {
     return {
       recommendedTransfers
     };
-  }, [salesRecords, shops, agents, marginPerDevice]);
+  }, [salesRecords, shops, agents]);
 
   return (
     <div className="dashboard-container">
@@ -79,15 +76,6 @@ export default function DecisionIntelligence() {
         <div>
           <h1 className="dashboard-title">Recommendations</h1>
           <p className="dashboard-subtitle">Suggested actions to improve business outcomes</p>
-        </div>
-        <div className="di-margin-input">
-          <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Unit Margin (GHS):</span>
-          <input 
-            type="number" 
-            value={marginPerDevice}
-            onChange={(e) => setMarginPerDevice(Number(e.target.value))}
-            style={{ width: '80px', padding: '0.25rem', borderRadius: '0.25rem', border: '1px solid var(--border-color)', backgroundColor: 'transparent', color: 'var(--text-primary)' }}
-          />
         </div>
       </div>
 
@@ -110,7 +98,9 @@ export default function DecisionIntelligence() {
                   {/* Agent Info */}
                   <div className="di-transfer-agent">
                     <p style={{ fontWeight: 700, color: 'var(--text-primary)', fontSize: '1.125rem' }}>{transfer.agent.name}</p>
-                    <p style={{ color: 'var(--text-secondary)', fontSize: '0.8rem', marginTop: '0.25rem' }}>Effectiveness: <span style={{ color: 'var(--accent-green)', fontWeight: 600 }}>{transfer.aec.toFixed(2)}</span></p>
+                    <p style={{ color: 'var(--text-secondary)', fontSize: '0.8rem', marginTop: '0.25rem' }}>
+                      Recent Sales: <span style={{ color: 'var(--accent-green)', fontWeight: 600 }}>{transfer.currentSales}</span> (Target: {transfer.expectedSales})
+                    </p>
                   </div>
 
                   {/* Transfer Flow */}
@@ -133,10 +123,7 @@ export default function DecisionIntelligence() {
                     <TrendingUp size={14} /> Expected Lift
                   </p>
                   <p style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--accent-green)' }}>
-                    +{transfer.projectedLift.toFixed(0)} units
-                  </p>
-                  <p style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--text-primary)', marginTop: '0.25rem' }}>
-                    + GHS {transfer.financialImpact.toLocaleString()}
+                    +{transfer.projectedLift.toFixed(0)} phones
                   </p>
                 </div>
               </div>

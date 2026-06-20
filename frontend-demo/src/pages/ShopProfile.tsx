@@ -166,7 +166,7 @@ export default function ShopProfile() {
         <div className="card profile-stat-card">
           <p className="profile-stat-label">Total Sales (All Time)</p>
           <p className="profile-stat-value">{shopData.totalSales}</p>
-          <p className="profile-stat-subtext">devices sold</p>
+          <p className="profile-stat-subtext">phones sold</p>
         </div>
         <div className="card profile-stat-card">
           <p className="profile-stat-label">Current Team Size</p>
@@ -192,7 +192,7 @@ export default function ShopProfile() {
                 <YAxis axisLine={false} tickLine={false} />
                 <Tooltip cursor={{ stroke: 'var(--border-color)', strokeWidth: 1 }} />
                 <Legend />
-                <Line type="monotone" dataKey="sales" stroke="var(--accent-green)" strokeWidth={3} name="Devices Sold" dot={false} activeDot={{ r: 6 }} />
+                <Line type="monotone" dataKey="sales" stroke="var(--accent-green)" strokeWidth={3} name="Phones Sold" dot={false} activeDot={{ r: 6 }} />
               </LineChart>
             </ResponsiveContainer>
           </div>
@@ -264,7 +264,7 @@ export default function ShopProfile() {
                   </div>
                   <div className="profile-history-sales">
                     <p className="profile-history-sales-val">{item.sales}</p>
-                    <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>devices sold</p>
+                    <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>phones sold</p>
                     <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginTop: '0.25rem' }}>
                       {item.daysActive > 0 ? (item.sales / item.daysActive).toFixed(1) : '0'}/day
                     </p>

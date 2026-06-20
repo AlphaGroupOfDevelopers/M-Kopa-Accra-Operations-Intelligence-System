@@ -58,7 +58,6 @@ export default function Layout() {
     { path: '/executive', icon: LayoutDashboard, label: 'Executive Dashboard' },
     { path: '/operations-intelligence', icon: Briefcase, label: 'Operations Overview' },
     { path: '/performance-intelligence', icon: TrendingUp, label: 'Sales Performance' },
-    { path: '/predictive-intelligence', icon: BarChart3, label: 'Business Insights' },
     { path: '/decision-intelligence', icon: Lightbulb, label: 'Recommendations' },
     { path: '/team-members', icon: Users, label: 'Team Management' },
     { path: '/shops', icon: Store, label: 'Shop Management' },

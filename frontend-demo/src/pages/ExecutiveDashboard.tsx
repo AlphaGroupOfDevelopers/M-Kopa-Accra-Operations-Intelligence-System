@@ -104,7 +104,7 @@ export default function ExecutiveDashboard() {
 
   return (
     <div className="dashboard-container">
-      <div className="dashboard-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div className="dashboard-header" style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
           <h1 className="dashboard-title">Executive Dashboard</h1>
           <p className="dashboard-subtitle">Your daily command center for network operations</p>
@@ -130,7 +130,7 @@ export default function ExecutiveDashboard() {
               <TrendingUp size={24} />
             </div>
           </div>
-          <p className="metric-trend trend-neutral">devices sold</p>
+          <p className="metric-trend trend-neutral">phones sold</p>
         </div>
 
         <div className="card metric-card">
@@ -156,7 +156,7 @@ export default function ExecutiveDashboard() {
               <Award size={24} />
             </div>
           </div>
-          <p className="metric-trend trend-positive">{executiveData.bestShop?.sales || 0} devices</p>
+          <p className="metric-trend trend-positive">{executiveData.bestShop?.sales || 0} phones</p>
         </div>
 
         <div className="card metric-card">
@@ -169,7 +169,7 @@ export default function ExecutiveDashboard() {
               <Calendar size={24} />
             </div>
           </div>
-          <p className="metric-trend trend-neutral">total devices</p>
+          <p className="metric-trend trend-neutral">total phones</p>
         </div>
       </div>
 
@@ -263,7 +263,7 @@ export default function ExecutiveDashboard() {
                   </div>
                   <div style={{ flex: 1 }}>
                     <p className="top-performer-name">{shop.name}</p>
-                    <p className="top-performer-score">{shop.value} devices</p>
+                    <p className="top-performer-score">{shop.value} phones</p>
                   </div>
                 </div>
               ))}
@@ -279,7 +279,7 @@ export default function ExecutiveDashboard() {
               </li>
               <li className="summary-list-item">
                 <span className="summary-list-icon text-green">✓</span>
-                <span>Average {(executiveData.mtdSales / new Date().getDate()).toFixed(1)} devices/day this month</span>
+                <span>Average {(executiveData.mtdSales / new Date().getDate()).toFixed(1)} phones/day this month</span>
               </li>
               <li className="summary-list-item">
                 <span className="summary-list-icon text-blue">ℹ</span>

@@ -1,8 +1,8 @@
 import { useMemo } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
-import { ArrowLeft, Mail, Phone, Calendar, GraduationCap, MapPin } from 'lucide-react';
-import { format, formatDistance, differenceInDays } from 'date-fns';
+import { ArrowLeft, Mail, Phone, Calendar, GraduationCap, MapPin, User, Hash } from 'lucide-react';
+import { format, formatDistance, differenceInDays, differenceInYears } from 'date-fns';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import './Dashboard.css';
 import './ShopProfile.css'; // Reusing profile styles
@@ -156,12 +156,28 @@ export default function TeamMemberProfile() {
             </div>
           </div>
           <div className="profile-info-item">
+            <User className="profile-info-icon" size={20} />
+            <div>
+              <p className="profile-info-label">Age</p>
+              <p className="profile-info-value">{differenceInYears(new Date(), new Date(agent.dateOfBirth))} years</p>
+            </div>
+          </div>
+          <div className="profile-info-item">
             <GraduationCap className="profile-info-icon" size={20} />
             <div>
               <p className="profile-info-label">Education</p>
               <p className="profile-info-value">{agent.education}</p>
             </div>
           </div>
+          {agent.digitalAddress && (
+            <div className="profile-info-item">
+              <Hash className="profile-info-icon" size={20} />
+              <div>
+                <p className="profile-info-label">Digital Address</p>
+                <p className="profile-info-value">{agent.digitalAddress}</p>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
@@ -170,7 +186,7 @@ export default function TeamMemberProfile() {
         <div className="card profile-stat-card">
           <p className="profile-stat-label">Total Career Sales</p>
           <p className="profile-stat-value">{agentData.totalSales}</p>
-          <p className="profile-stat-subtext">devices sold</p>
+          <p className="profile-stat-subtext">phones sold</p>
         </div>
         <div className="card profile-stat-card">
           <p className="profile-stat-label">Employment Duration</p>
@@ -197,7 +213,7 @@ export default function TeamMemberProfile() {
                 <XAxis dataKey="date" axisLine={false} tickLine={false} dy={10} />
                 <YAxis axisLine={false} tickLine={false} />
                 <Tooltip cursor={{ stroke: 'var(--border-color)', strokeWidth: 1 }} />
-                <Line type="monotone" dataKey="sales" stroke="var(--accent-green)" strokeWidth={3} name="Devices Sold" dot={false} activeDot={{ r: 6 }} />
+                <Line type="monotone" dataKey="sales" stroke="var(--accent-green)" strokeWidth={3} name="Phones Sold" dot={false} activeDot={{ r: 6 }} />
               </LineChart>
             </ResponsiveContainer>
           </div>

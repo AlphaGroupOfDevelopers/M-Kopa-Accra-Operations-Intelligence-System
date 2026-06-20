@@ -116,7 +116,7 @@ export default function DataEntry() {
 
             <div className="form-group">
               <label htmlFor="devicesSold" className="form-label">
-                Number of Devices Sold
+                Number of Phones Sold
               </label>
               <input
                 id="devicesSold"
@@ -144,7 +144,7 @@ export default function DataEntry() {
                 required
               />
               <p className="form-helper-text">
-                Examples: "Good day, all customers satisfied", "Stock shortage - ran out of devices by noon", "Heavy competition from nearby shop"
+                Examples: "Good day, all customers satisfied", "Stock shortage - ran out of phones by noon", "Heavy competition from nearby shop"
               </p>
             </div>
 
@@ -171,7 +171,7 @@ export default function DataEntry() {
             ✓ Positive day
           </button>
           <button
-            onClick={() => setFormData({ ...formData, remarks: 'Stock shortage - ran out of devices by noon' })}
+            onClick={() => setFormData({ ...formData, remarks: 'Stock shortage - ran out of phones by noon' })}
             className="sample-remark-btn warning"
             type="button"
           >

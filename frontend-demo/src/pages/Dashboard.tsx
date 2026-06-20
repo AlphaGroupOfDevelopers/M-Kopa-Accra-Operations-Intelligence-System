@@ -134,7 +134,7 @@ export default function Dashboard() {
             </div>
           </div>
           <p className="metric-trend trend-neutral">
-            Avg: {(stats.last7DaysSales / 7).toFixed(1)} devices/day
+            Avg: {(stats.last7DaysSales / 7).toFixed(1)} phones/day
           </p>
         </div>
 

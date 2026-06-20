@@ -24,7 +24,6 @@ export default function MoreMenu() {
   const menuItems = [
     { path: '/executive', icon: LayoutDashboard, label: 'Executive Dashboard' },
     { path: '/performance-intelligence', icon: TrendingUp, label: 'Sales Performance' },
-    { path: '/predictive-intelligence', icon: BarChart3, label: 'Business Insights' },
     { path: '/decision-intelligence', icon: Lightbulb, label: 'Recommendations' },
     { path: '/data-entry', icon: FileText, label: 'Reports' },
   ];

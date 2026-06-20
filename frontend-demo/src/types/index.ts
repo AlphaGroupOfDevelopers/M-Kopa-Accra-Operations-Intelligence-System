@@ -8,6 +8,7 @@ export interface Agent {
   employmentDate: string;
   currentShopId: string;
   status: 'active' | 'inactive';
+  digitalAddress?: string;
   photo?: string;
   role?: 'main' | 'assistant';
 }

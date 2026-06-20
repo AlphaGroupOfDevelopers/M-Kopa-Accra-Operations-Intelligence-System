@@ -85,7 +85,7 @@ export default function PerformanceIntelligence() {
     const l14Sales = salesRecords.filter(r => r.date >= last14).reduce((sum, r) => sum + r.devicesSold, 0);
     const p14Sales = salesRecords.filter(r => r.date >= prior14 && r.date < last14).reduce((sum, r) => sum + r.devicesSold, 0);
     
-    const momentum = p14Sales > 0 ? ((l14Sales - p14Sales) / p14Sales) * 100 : 0;
+    const momentum = l14Sales - p14Sales;
 
     return {
       shopPerformance,
@@ -110,7 +110,7 @@ export default function PerformanceIntelligence() {
             </div>
           </div>
           <p className="sales-momentum-value">
-            {performance.momentum >= 0 ? '+' : ''}{performance.momentum.toFixed(1)}%
+            {performance.momentum >= 0 ? '+' : ''}{performance.momentum} phones
           </p>
           <p className="sales-momentum-label">Compared to previous 14 days</p>
         </div>
