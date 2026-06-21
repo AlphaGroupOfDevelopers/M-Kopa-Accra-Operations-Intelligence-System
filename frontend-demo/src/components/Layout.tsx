@@ -7,7 +7,6 @@ import {
   Store, 
   TrendingUp, 
   LogOut,
-  BarChart3,
   Menu,
   X,
   Moon,
