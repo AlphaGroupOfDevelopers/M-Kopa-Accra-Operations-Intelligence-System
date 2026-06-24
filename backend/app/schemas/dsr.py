@@ -1,18 +1,18 @@
-"""Agent (Team Member) schemas."""
+"""DSR (Direct Sales Representative) schemas."""
 
 from datetime import date
 from typing import Optional
 
 from pydantic import BaseModel, EmailStr, Field
 
-from app.models.agent import EducationLevel, EmploymentStatus
+from app.models.dsr import EducationLevel, EmploymentStatus
 from app.schemas.common import TimestampSchema
 
 
-class AgentBase(BaseModel):
-    """Base agent schema."""
+class DSRBase(BaseModel):
+    """Base DSR schema."""
 
-    employee_id: str = Field(..., min_length=1, max_length=50, description="Employee ID")
+    account_number: str = Field(..., min_length=1, max_length=50, description="Account Number")
     first_name: str = Field(..., min_length=1, max_length=100, description="First name")
     last_name: str = Field(..., min_length=1, max_length=100, description="Last name")
     email: Optional[EmailStr] = Field(None, description="Email address")
@@ -31,14 +31,14 @@ class AgentBase(BaseModel):
     notes: Optional[str] = Field(None, description="Additional notes")
 
 
-class AgentCreate(AgentBase):
-    """Agent creation schema."""
+class DSRCreate(DSRBase):
+    """DSR creation schema."""
 
     pass
 
 
-class AgentUpdate(BaseModel):
-    """Agent update schema."""
+class DSRUpdate(BaseModel):
+    """DSR update schema."""
 
     first_name: Optional[str] = Field(None, min_length=1, max_length=100)
     last_name: Optional[str] = Field(None, min_length=1, max_length=100)
@@ -58,20 +58,20 @@ class AgentUpdate(BaseModel):
     notes: Optional[str] = None
 
 
-class AgentRead(AgentBase, TimestampSchema):
-    """Agent read schema."""
+class DSRRead(DSRBase, TimestampSchema):
+    """DSR read schema."""
 
-    id: int = Field(..., description="Agent ID")
+    id: int = Field(..., description="DSR ID")
     full_name: str = Field(..., description="Full name")
 
     model_config = {"from_attributes": True}
 
 
-class AgentListItem(BaseModel):
-    """Agent list item schema (simplified for lists)."""
+class DSRListItem(BaseModel):
+    """DSR list item schema (simplified for lists)."""
 
     id: int
-    employee_id: str
+    account_number: str
     full_name: str
     email: Optional[EmailStr]
     phone: str

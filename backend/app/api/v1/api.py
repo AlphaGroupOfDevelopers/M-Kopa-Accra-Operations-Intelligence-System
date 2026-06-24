@@ -2,7 +2,7 @@
 
 from fastapi import APIRouter
 
-from app.api.v1.endpoints import agents, auth, sales, shops
+from app.api.v1.endpoints import dsrs, auth, sales, shops
 
 api_router = APIRouter()
 
@@ -13,11 +13,11 @@ api_router.include_router(
     tags=["Authentication"],
 )
 
-# Include team member routes
+# Include DSR routes
 api_router.include_router(
-    agents.router,
-    prefix="/agents",
-    tags=["Team Members"],
+    dsrs.router,
+    prefix="/dsrs",
+    tags=["DSRs"],
 )
 
 # Include shop routes

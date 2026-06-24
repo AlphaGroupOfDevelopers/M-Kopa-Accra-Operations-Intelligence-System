@@ -2,7 +2,7 @@
 
 from typing import List
 
-from sqlalchemy import String, Text, Float, Integer
+from sqlalchemy import String, Text, Float, Integer, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base import Base, TimestampMixin, SoftDeleteMixin
@@ -14,7 +14,6 @@ class Shop(Base, TimestampMixin, SoftDeleteMixin):
 
     Attributes:
         id: Primary key
-        code: Unique shop identifier code
         name: Shop name
         location: Physical address/location
         region: Geographic region (e.g., Greater Accra)
@@ -29,8 +28,11 @@ class Shop(Base, TimestampMixin, SoftDeleteMixin):
 
     __tablename__ = "shops"
 
+    __table_args__ = (
+        UniqueConstraint('name', 'location', name='uq_shop_name_location'),
+    )
+
     id: Mapped[int] = mapped_column(primary_key=True, index=True)
-    code: Mapped[str] = mapped_column(String(50), unique=True, index=True, nullable=False)
     name: Mapped[str] = mapped_column(String(255), nullable=False)
     location: Mapped[str] = mapped_column(String(500), nullable=False)
     region: Mapped[str] = mapped_column(String(100), nullable=False, default="Greater Accra")
@@ -53,4 +55,4 @@ class Shop(Base, TimestampMixin, SoftDeleteMixin):
     )
 
     def __repr__(self) -> str:
-        return f"<Shop(id={self.id}, code='{self.code}', name='{self.name}')>"
+        return f"<Shop(id={self.id}, name='{self.name}', location='{self.location}')>"

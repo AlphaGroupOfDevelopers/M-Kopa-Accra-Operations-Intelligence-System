@@ -37,7 +37,7 @@ def create_shop(
         Created shop
 
     Raises:
-        HTTPException: If shop code already exists
+        HTTPException: If shop name and location combination already exists
     """
     try:
         shop = ShopService.create_shop(db, shop_data)
@@ -104,7 +104,7 @@ def search_shops(
     current_user: User = Depends(get_current_active_user),
 ) -> list[ShopListItem]:
     """
-    Search shops by name, code, or location.
+    Search shops by name or location.
 
     Args:
         q: Search term
@@ -152,20 +152,22 @@ def get_shop(
 
 
 @router.get(
-    "/code/{shop_code}",
+    "/lookup",
     response_model=ShopRead,
-    summary="Get shop by code",
+    summary="Get shop by name and location",
 )
-def get_shop_by_code(
-    shop_code: str,
+def get_shop_by_name_and_location(
+    name: str = Query(..., description="Shop name"),
+    location: str = Query(..., description="Shop location"),
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_active_user),
 ) -> ShopRead:
     """
-    Get shop details by shop code.
+    Get shop details by shop name and location.
 
     Args:
-        shop_code: Shop code
+        name: Shop name
+        location: Shop location
         db: Database session
         current_user: Current authenticated user
 
@@ -175,11 +177,11 @@ def get_shop_by_code(
     Raises:
         HTTPException: If shop not found
     """
-    shop = ShopService.get_shop_by_code(db, shop_code)
+    shop = ShopService.get_shop_by_name_and_location(db, name, location)
     if not shop:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Shop with code {shop_code} not found",
+            detail=f"Shop with name '{name}' and location '{location}' not found",
         )
     return shop
 

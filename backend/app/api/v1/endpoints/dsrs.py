@@ -1,4 +1,4 @@
-"""Team Member (Agent) API endpoints."""
+"""DSR API endpoints."""
 
 from typing import Optional
 
@@ -6,43 +6,43 @@ from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
 
 from app.api.deps import get_current_active_user, get_db
-from app.models.agent import EmploymentStatus
+from app.models.dsr import EmploymentStatus
 from app.models.user import User
-from app.schemas.agent import AgentCreate, AgentListItem, AgentRead, AgentUpdate
+from app.schemas.dsr import DSRCreate, DSRListItem, DSRRead, DSRUpdate
 from app.schemas.common import MessageResponse, PaginatedResponse, SuccessResponse
-from app.services.team_service import TeamService
+from app.services.dsr_service import DSRService
 
 router = APIRouter()
 
 
 @router.post(
     "",
-    response_model=AgentRead,
+    response_model=DSRRead,
     status_code=status.HTTP_201_CREATED,
-    summary="Create new agent",
+    summary="Create new DSR",
 )
-def create_agent(
-    agent_data: AgentCreate,
+def create_dsr(
+    dsr_data: DSRCreate,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_active_user),
-) -> AgentRead:
+) -> DSRRead:
     """
-    Create a new team member (agent).
+    Create a new DSR.
 
     Args:
-        agent_data: Agent creation data
+        dsr_data: DSR creation data
         db: Database session
         current_user: Current authenticated user
 
     Returns:
-        Created agent
+        Created DSR
 
     Raises:
-        HTTPException: If employee_id or email already exists
+        HTTPException: If account_number or email already exists
     """
     try:
-        agent = TeamService.create_agent(db, agent_data)
-        return agent
+        dsr = DSRService.create_dsr(db, dsr_data)
+        return dsr
     except ValueError as e:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -52,18 +52,18 @@ def create_agent(
 
 @router.get(
     "",
-    response_model=PaginatedResponse[AgentListItem],
-    summary="List agents",
+    response_model=PaginatedResponse[DSRListItem],
+    summary="List DSRs",
 )
-def list_agents(
+def list_dsrs(
     page: int = Query(1, ge=1, description="Page number"),
     page_size: int = Query(50, ge=1, le=100, description="Items per page"),
     employment_status: Optional[EmploymentStatus] = Query(None, description="Filter by employment status"),
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_active_user),
-) -> PaginatedResponse[AgentListItem]:
+) -> PaginatedResponse[DSRListItem]:
     """
-    List agents with pagination and filtering.
+    List DSRs with pagination and filtering.
 
     Args:
         page: Page number
@@ -73,10 +73,10 @@ def list_agents(
         current_user: Current authenticated user
 
     Returns:
-        Paginated list of agents
+        Paginated list of DSRs
     """
     skip = (page - 1) * page_size
-    agents, total = TeamService.list_agents(
+    dsrs, total = DSRService.list_dsrs(
         db,
         skip=skip,
         limit=page_size,
@@ -84,7 +84,7 @@ def list_agents(
     )
 
     return PaginatedResponse.create(
-        items=agents,
+        items=dsrs,
         total=total,
         page=page,
         page_size=page_size,
@@ -93,16 +93,16 @@ def list_agents(
 
 @router.get(
     "/search",
-    response_model=list[AgentListItem],
-    summary="Search agents",
+    response_model=list[DSRListItem],
+    summary="Search DSRs",
 )
-def search_agents(
+def search_dsrs(
     q: str = Query(..., min_length=1, description="Search term"),
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_active_user),
-) -> list[AgentListItem]:
+) -> list[DSRListItem]:
     """
-    Search agents by name, employee ID, or email.
+    Search DSRs by name, account number, or email.
 
     Args:
         q: Search term
@@ -110,128 +110,128 @@ def search_agents(
         current_user: Current authenticated user
 
     Returns:
-        List of matching agents
+        List of matching DSRs
     """
-    agents = TeamService.search_agents(db, q)
-    return agents
+    dsrs = DSRService.search_dsrs(db, q)
+    return dsrs
 
 
 @router.get(
-    "/{agent_id}",
-    response_model=AgentRead,
-    summary="Get agent by ID",
+    "/{dsr_id}",
+    response_model=DSRRead,
+    summary="Get DSR by ID",
 )
-def get_agent(
-    agent_id: int,
+def get_dsr(
+    dsr_id: int,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_active_user),
-) -> AgentRead:
+) -> DSRRead:
     """
-    Get agent details by ID.
+    Get DSR details by ID.
 
     Args:
-        agent_id: Agent ID
+        dsr_id: DSR ID
         db: Database session
         current_user: Current authenticated user
 
     Returns:
-        Agent details
+        DSR details
 
     Raises:
-        HTTPException: If agent not found
+        HTTPException: If DSR not found
     """
-    agent = TeamService.get_agent(db, agent_id)
-    if not agent:
+    dsr = DSRService.get_dsr(db, dsr_id)
+    if not dsr:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Agent with ID {agent_id} not found",
+            detail=f"DSR with ID {dsr_id} not found",
         )
-    return agent
+    return dsr
 
 
 @router.get(
-    "/employee/{employee_id}",
-    response_model=AgentRead,
-    summary="Get agent by employee ID",
+    "/account/{account_number}",
+    response_model=DSRRead,
+    summary="Get DSR by account number",
 )
-def get_agent_by_employee_id(
-    employee_id: str,
+def get_dsr_by_account_number(
+    account_number: str,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_active_user),
-) -> AgentRead:
+) -> DSRRead:
     """
-    Get agent details by employee ID.
+    Get DSR details by account number.
 
     Args:
-        employee_id: Employee ID
+        account_number: Account Number
         db: Database session
         current_user: Current authenticated user
 
     Returns:
-        Agent details
+        DSR details
 
     Raises:
-        HTTPException: If agent not found
+        HTTPException: If DSR not found
     """
-    agent = TeamService.get_agent_by_employee_id(db, employee_id)
-    if not agent:
+    dsr = DSRService.get_dsr_by_account_number(db, account_number)
+    if not dsr:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Agent with employee ID {employee_id} not found",
+            detail=f"DSR with account number {account_number} not found",
         )
-    return agent
+    return dsr
 
 
 @router.put(
-    "/{agent_id}",
-    response_model=AgentRead,
-    summary="Update agent",
+    "/{dsr_id}",
+    response_model=DSRRead,
+    summary="Update DSR",
 )
-def update_agent(
-    agent_id: int,
-    agent_data: AgentUpdate,
+def update_dsr(
+    dsr_id: int,
+    dsr_data: DSRUpdate,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_active_user),
-) -> AgentRead:
+) -> DSRRead:
     """
-    Update agent information.
+    Update DSR information.
 
     Args:
-        agent_id: Agent ID
-        agent_data: Update data
+        dsr_id: DSR ID
+        dsr_data: Update data
         db: Database session
         current_user: Current authenticated user
 
     Returns:
-        Updated agent
+        Updated DSR
 
     Raises:
-        HTTPException: If agent not found
+        HTTPException: If DSR not found
     """
-    agent = TeamService.update_agent(db, agent_id, agent_data)
-    if not agent:
+    dsr = DSRService.update_dsr(db, dsr_id, dsr_data)
+    if not dsr:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Agent with ID {agent_id} not found",
+            detail=f"DSR with ID {dsr_id} not found",
         )
-    return agent
+    return dsr
 
 
 @router.delete(
-    "/{agent_id}",
+    "/{dsr_id}",
     response_model=SuccessResponse,
-    summary="Delete agent",
+    summary="Delete DSR",
 )
-def delete_agent(
-    agent_id: int,
+def delete_dsr(
+    dsr_id: int,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_active_user),
 ) -> SuccessResponse:
     """
-    Soft delete an agent.
+    Soft delete a DSR.
 
     Args:
-        agent_id: Agent ID
+        dsr_id: DSR ID
         db: Database session
         current_user: Current authenticated user
 
@@ -239,16 +239,16 @@ def delete_agent(
         Success response
 
     Raises:
-        HTTPException: If agent not found
+        HTTPException: If DSR not found
     """
-    success = TeamService.delete_agent(db, agent_id)
+    success = DSRService.delete_dsr(db, dsr_id)
     if not success:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Agent with ID {agent_id} not found",
+            detail=f"DSR with ID {dsr_id} not found",
         )
 
     return SuccessResponse(
         success=True,
-        message=f"Agent {agent_id} deleted successfully",
+        message=f"DSR {dsr_id} deleted successfully",
     )

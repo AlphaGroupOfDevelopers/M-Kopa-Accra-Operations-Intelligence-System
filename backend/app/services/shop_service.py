@@ -24,12 +24,15 @@ class ShopService:
             Created shop
 
         Raises:
-            ValueError: If shop code already exists
+            ValueError: If shop name and location combination already exists
         """
-        # Check if shop code already exists
-        existing = db.query(Shop).filter(Shop.code == shop_data.code).first()
+        # Check if shop name and location combination already exists
+        existing = db.query(Shop).filter(
+            Shop.name == shop_data.name, 
+            Shop.location == shop_data.location
+        ).first()
         if existing:
-            raise ValueError(f"Shop code {shop_data.code} already exists")
+            raise ValueError(f"Shop with name '{shop_data.name}' and location '{shop_data.location}' already exists")
 
         # Create shop
         shop = Shop(**shop_data.model_dump())
@@ -44,9 +47,13 @@ class ShopService:
         return db.query(Shop).filter(Shop.id == shop_id, Shop.deleted_at.is_(None)).first()
 
     @staticmethod
-    def get_shop_by_code(db: Session, code: str) -> Optional[Shop]:
-        """Get shop by code."""
-        return db.query(Shop).filter(Shop.code == code, Shop.deleted_at.is_(None)).first()
+    def get_shop_by_name_and_location(db: Session, name: str, location: str) -> Optional[Shop]:
+        """Get shop by name and location."""
+        return db.query(Shop).filter(
+            Shop.name == name,
+            Shop.location == location,
+            Shop.deleted_at.is_(None)
+        ).first()
 
     @staticmethod
     def list_shops(
@@ -131,7 +138,7 @@ class ShopService:
     @staticmethod
     def search_shops(db: Session, search_term: str, limit: int = 50) -> List[Shop]:
         """
-        Search shops by name, code, or location.
+        Search shops by name or location.
 
         Args:
             db: Database session
@@ -148,7 +155,6 @@ class ShopService:
                 Shop.deleted_at.is_(None),
                 (
                     Shop.name.ilike(search_pattern)
-                    | Shop.code.ilike(search_pattern)
                     | Shop.location.ilike(search_pattern)
                 ),
             )

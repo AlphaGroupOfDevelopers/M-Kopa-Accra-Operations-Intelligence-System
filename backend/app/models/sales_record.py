@@ -20,31 +20,31 @@ class DataSource(str, enum.Enum):
 
 class SalesRecord(Base, TimestampMixin):
     """
-    Sales record model capturing daily sales submissions from agents.
+    Sales record model capturing daily sales submissions from DSRs.
 
-    Each record represents a daily sales report submitted by an agent,
+    Each record represents a daily sales report submitted by a DSR,
     including devices sold and operational challenges/remarks.
 
     Attributes:
         id: Primary key
-        agent_id: Foreign key to Agent
+        dsr_id: Foreign key to DSR
         shop_id: Foreign key to Shop (current assignment at time of sale)
         sale_date: Date of sales activity
         devices_sold: Number of devices sold
-        remarks: Agent's remarks/challenges for the day
+        remarks: DSR's remarks/challenges for the day
         data_source: Source system that created this record
         external_id: ID from external system (forms, etc.)
         verified: Whether record has been verified
         verified_by: User ID who verified the record
-        agent: Relationship to Agent
+        dsr: Relationship to DSR
         shop: Relationship to Shop
     """
 
     __tablename__ = "sales_records"
 
     id: Mapped[int] = mapped_column(primary_key=True, index=True)
-    agent_id: Mapped[int] = mapped_column(
-        ForeignKey("agents.id", ondelete="CASCADE"),
+    dsr_id: Mapped[int] = mapped_column(
+        ForeignKey("dsrs.id", ondelete="CASCADE"),
         nullable=False,
         index=True
     )
@@ -69,8 +69,8 @@ class SalesRecord(Base, TimestampMixin):
     )
 
     # Relationships
-    agent: Mapped["Agent"] = relationship("Agent", back_populates="sales_records")
+    dsr: Mapped["DSR"] = relationship("DSR", back_populates="sales_records")
     shop: Mapped["Shop"] = relationship("Shop", back_populates="sales_records")
 
     def __repr__(self) -> str:
-        return f"<SalesRecord(id={self.id}, agent_id={self.agent_id}, shop_id={self.shop_id}, date={self.sale_date}, devices={self.devices_sold})>"
+        return f"<SalesRecord(id={self.id}, dsr_id={self.dsr_id}, shop_id={self.shop_id}, date={self.sale_date}, devices={self.devices_sold})>"

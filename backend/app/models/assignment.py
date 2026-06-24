@@ -1,4 +1,4 @@
-"""Assignment and Transfer models for agent-shop relationships."""
+"""Assignment and Transfer models for dsr-shop relationships."""
 
 from datetime import date
 from typing import Optional
@@ -29,29 +29,29 @@ class TransferReason(str, enum.Enum):
 
 class Assignment(Base, TimestampMixin):
     """
-    Assignment model tracking agent assignments to shops over time.
+    Assignment model tracking DSR assignments to shops over time.
 
-    This model maintains historical records of all agent-shop assignments,
+    This model maintains historical records of all DSR-shop assignments,
     enabling performance tracking and transfer analysis.
 
     Attributes:
         id: Primary key
-        agent_id: Foreign key to Agent
+        dsr_id: Foreign key to DSR
         shop_id: Foreign key to Shop
         start_date: Assignment start date
         end_date: Assignment end date (None if current)
         status: Assignment status
-        role: Agent's role at the shop
+        role: DSR's role at the shop
         notes: Additional assignment notes
-        agent: Relationship to Agent
+        dsr: Relationship to DSR
         shop: Relationship to Shop
     """
 
     __tablename__ = "assignments"
 
     id: Mapped[int] = mapped_column(primary_key=True, index=True)
-    agent_id: Mapped[int] = mapped_column(
-        ForeignKey("agents.id", ondelete="CASCADE"),
+    dsr_id: Mapped[int] = mapped_column(
+        ForeignKey("dsrs.id", ondelete="CASCADE"),
         nullable=False,
         index=True
     )
@@ -72,7 +72,7 @@ class Assignment(Base, TimestampMixin):
     notes: Mapped[str | None] = mapped_column(Text, nullable=True)
 
     # Relationships
-    agent: Mapped["Agent"] = relationship("Agent", back_populates="assignments")
+    dsr: Mapped["DSR"] = relationship("DSR", back_populates="assignments")
     shop: Mapped["Shop"] = relationship("Shop", back_populates="assignments")
 
     @property
@@ -87,19 +87,19 @@ class Assignment(Base, TimestampMixin):
         return (end - self.start_date).days
 
     def __repr__(self) -> str:
-        return f"<Assignment(id={self.id}, agent_id={self.agent_id}, shop_id={self.shop_id}, status='{self.status}')>"
+        return f"<Assignment(id={self.id}, dsr_id={self.dsr_id}, shop_id={self.shop_id}, status='{self.status}')>"
 
 
 class TransferRecord(Base, TimestampMixin):
     """
-    Transfer record tracking agent movements between shops.
+    Transfer record tracking DSR movements between shops.
 
     This model specifically records transfers with additional context like
     reason, approver, and effectiveness tracking.
 
     Attributes:
         id: Primary key
-        agent_id: Foreign key to Agent
+        dsr_id: Foreign key to DSR
         from_shop_id: Foreign key to previous Shop
         to_shop_id: Foreign key to new Shop
         transfer_date: Date of transfer
@@ -113,8 +113,8 @@ class TransferRecord(Base, TimestampMixin):
     __tablename__ = "transfer_records"
 
     id: Mapped[int] = mapped_column(primary_key=True, index=True)
-    agent_id: Mapped[int] = mapped_column(
-        ForeignKey("agents.id", ondelete="CASCADE"),
+    dsr_id: Mapped[int] = mapped_column(
+        ForeignKey("dsrs.id", ondelete="CASCADE"),
         nullable=False,
         index=True
     )
@@ -142,9 +142,9 @@ class TransferRecord(Base, TimestampMixin):
     notes: Mapped[str | None] = mapped_column(Text, nullable=True)
 
     # Relationships
-    agent: Mapped["Agent"] = relationship("Agent", foreign_keys=[agent_id])
+    dsr: Mapped["DSR"] = relationship("DSR", foreign_keys=[dsr_id])
     from_shop: Mapped["Shop"] = relationship("Shop", foreign_keys=[from_shop_id])
     to_shop: Mapped["Shop"] = relationship("Shop", foreign_keys=[to_shop_id])
 
     def __repr__(self) -> str:
-        return f"<TransferRecord(id={self.id}, agent_id={self.agent_id}, from={self.from_shop_id}, to={self.to_shop_id})>"
+        return f"<TransferRecord(id={self.id}, dsr_id={self.dsr_id}, from={self.from_shop_id}, to={self.to_shop_id})>"

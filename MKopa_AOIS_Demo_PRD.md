@@ -29,7 +29,7 @@ This demo will encompass all features detailed in the original M-Kopa Accra Oper
 
 ### 3.2. Daily Sales Collection & Ingestion
 
-*   **Automated Daily Sales Report Ingestion**: Show how agents' Google/Microsoft Forms submissions (including Agent Name, Number of Devices Sold, Remarks) are automatically captured, processed, and associated with reporting date and assigned shop.
+*   **Automated Daily Sales Report Ingestion**: Show how agents' Google/Microsoft Forms submissions (including DSR Account Number, Number of Devices Sold, Remarks) are automatically captured, processed, and associated with reporting date and assigned shop.
 
 ### 3.3. Sales Intelligence
 

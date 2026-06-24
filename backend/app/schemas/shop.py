@@ -10,7 +10,6 @@ from app.schemas.common import TimestampSchema
 class ShopBase(BaseModel):
     """Base shop schema."""
 
-    code: str = Field(..., min_length=1, max_length=50, description="Shop code")
     name: str = Field(..., min_length=1, max_length=255, description="Shop name")
     location: str = Field(..., min_length=1, max_length=500, description="Physical location")
     region: str = Field("Greater Accra", max_length=100, description="Region")
@@ -52,7 +51,6 @@ class ShopListItem(BaseModel):
     """Shop list item schema (simplified for lists)."""
 
     id: int
-    code: str
     name: str
     location: str
     region: str

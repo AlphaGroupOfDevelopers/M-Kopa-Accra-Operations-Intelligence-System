@@ -1,4 +1,4 @@
-"""Agent (Team Member) model."""
+"""DSR (Direct Sales Representative) model."""
 
 from datetime import date
 from typing import List, Optional
@@ -28,15 +28,15 @@ class EducationLevel(str, enum.Enum):
     OTHER = "other"
 
 
-class Agent(Base, TimestampMixin, SoftDeleteMixin):
+class DSR(Base, TimestampMixin, SoftDeleteMixin):
     """
-    Agent/Team Member model representing M-Kopa sales agents.
+    DSR (Direct Sales Representative) model representing M-Kopa agents.
 
     Attributes:
         id: Primary key
-        employee_id: Unique employee identifier
-        first_name: Agent's first name
-        last_name: Agent's last name
+        account_number: Unique account identifier
+        first_name: DSR's first name
+        last_name: DSR's last name
         email: Email address
         phone: Contact phone number
         date_of_birth: Date of birth
@@ -50,15 +50,15 @@ class Agent(Base, TimestampMixin, SoftDeleteMixin):
         national_id: National identification number
         emergency_contact_name: Emergency contact person
         emergency_contact_phone: Emergency contact phone
-        notes: Additional notes about the agent
+        notes: Additional notes about the DSR
         assignments: Relationship to shop assignments
         sales_records: Relationship to sales records
     """
 
-    __tablename__ = "agents"
+    __tablename__ = "dsrs"
 
     id: Mapped[int] = mapped_column(primary_key=True, index=True)
-    employee_id: Mapped[str] = mapped_column(String(50), unique=True, index=True, nullable=False)
+    account_number: Mapped[str] = mapped_column(String(50), unique=True, index=True, nullable=False)
     first_name: Mapped[str] = mapped_column(String(100), nullable=False)
     last_name: Mapped[str] = mapped_column(String(100), nullable=False)
     email: Mapped[str | None] = mapped_column(String(255), unique=True, index=True, nullable=True)
@@ -96,28 +96,28 @@ class Agent(Base, TimestampMixin, SoftDeleteMixin):
     # Relationships
     assignments: Mapped[List["Assignment"]] = relationship(
         "Assignment",
-        back_populates="agent",
+        back_populates="dsr",
         cascade="all, delete-orphan",
         order_by="Assignment.start_date.desc()"
     )
     sales_records: Mapped[List["SalesRecord"]] = relationship(
         "SalesRecord",
-        back_populates="agent",
+        back_populates="dsr",
         cascade="all, delete-orphan"
     )
 
     @property
     def full_name(self) -> str:
-        """Get agent's full name."""
+        """Get DSR's full name."""
         return f"{self.first_name} {self.last_name}"
 
     @property
     def current_assignment(self) -> Optional["Assignment"]:
-        """Get agent's current active assignment."""
+        """Get DSR's current active assignment."""
         for assignment in self.assignments:
             if assignment.is_current:
                 return assignment
         return None
 
     def __repr__(self) -> str:
-        return f"<Agent(id={self.id}, employee_id='{self.employee_id}', name='{self.full_name}')>"
+        return f"<DSR(id={self.id}, account_number='{self.account_number}', name='{self.full_name}')>"
