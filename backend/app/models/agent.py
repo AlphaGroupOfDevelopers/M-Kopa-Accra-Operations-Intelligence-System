@@ -30,15 +30,14 @@ class EducationLevel(str, enum.Enum):
 
 class Agent(Base, TimestampMixin, SoftDeleteMixin):
     """
-    Agent/Team Member model representing M-Kopa sales agents.
+    Agent/DSR (Direct Sales Representative) model representing M-Kopa sales agents.
 
     Attributes:
         id: Primary key
-        employee_id: Unique employee identifier
-        first_name: Agent's first name
-        last_name: Agent's last name
+        account_number: Unique account number (also serves as primary phone number)
+        full_name: Agent's full name
         email: Email address
-        phone: Contact phone number
+        secondary_number: Alternative contact number
         date_of_birth: Date of birth
         gender: Gender
         address: Residential address
@@ -46,8 +45,7 @@ class Agent(Base, TimestampMixin, SoftDeleteMixin):
         education_institution: Name of educational institution
         education_year: Year of graduation/completion
         employment_date: Date of employment with M-Kopa
-        employment_status: Current employment status
-        national_id: National identification number
+        employment_status: Current employment status (defaults to ACTIVE)
         emergency_contact_name: Emergency contact person
         emergency_contact_phone: Emergency contact phone
         notes: Additional notes about the agent
@@ -58,17 +56,15 @@ class Agent(Base, TimestampMixin, SoftDeleteMixin):
     __tablename__ = "agents"
 
     id: Mapped[int] = mapped_column(primary_key=True, index=True)
-    employee_id: Mapped[str] = mapped_column(String(50), unique=True, index=True, nullable=False)
-    first_name: Mapped[str] = mapped_column(String(100), nullable=False)
-    last_name: Mapped[str] = mapped_column(String(100), nullable=False)
+    account_number: Mapped[str] = mapped_column(String(20), unique=True, index=True, nullable=False)
+    full_name: Mapped[str] = mapped_column(String(255), nullable=False)
     email: Mapped[str | None] = mapped_column(String(255), unique=True, index=True, nullable=True)
-    phone: Mapped[str] = mapped_column(String(20), nullable=False)
+    secondary_number: Mapped[str | None] = mapped_column(String(20), nullable=True)
 
     # Personal Information
     date_of_birth: Mapped[date | None] = mapped_column(Date, nullable=True)
     gender: Mapped[str | None] = mapped_column(String(20), nullable=True)
     address: Mapped[str | None] = mapped_column(Text, nullable=True)
-    national_id: Mapped[str | None] = mapped_column(String(50), unique=True, nullable=True)
 
     # Education
     education_level: Mapped[EducationLevel | None] = mapped_column(
@@ -83,7 +79,8 @@ class Agent(Base, TimestampMixin, SoftDeleteMixin):
     employment_status: Mapped[EmploymentStatus] = mapped_column(
         SQLEnum(EmploymentStatus, name="employment_status_enum", create_constraint=True),
         default=EmploymentStatus.ACTIVE,
-        nullable=False
+        nullable=False,
+        server_default="active"
     )
 
     # Emergency Contact
@@ -107,11 +104,6 @@ class Agent(Base, TimestampMixin, SoftDeleteMixin):
     )
 
     @property
-    def full_name(self) -> str:
-        """Get agent's full name."""
-        return f"{self.first_name} {self.last_name}"
-
-    @property
     def current_assignment(self) -> Optional["Assignment"]:
         """Get agent's current active assignment."""
         for assignment in self.assignments:
@@ -120,4 +112,4 @@ class Agent(Base, TimestampMixin, SoftDeleteMixin):
         return None
 
     def __repr__(self) -> str:
-        return f"<Agent(id={self.id}, employee_id='{self.employee_id}', name='{self.full_name}')>"
+        return f"<Agent(id={self.id}, account_number='{self.account_number}', name='{self.full_name}')>"

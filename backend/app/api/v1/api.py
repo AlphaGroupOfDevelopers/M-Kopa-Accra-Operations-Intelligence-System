@@ -2,7 +2,7 @@
 
 from fastapi import APIRouter
 
-from app.api.v1.endpoints import agents, auth, sales, shops
+from app.api.v1.endpoints import agents, auth, sales, shops, integrations
 
 api_router = APIRouter()
 
@@ -32,6 +32,13 @@ api_router.include_router(
     sales.router,
     prefix="/sales",
     tags=["Sales"],
+)
+
+# Include integrations routes
+api_router.include_router(
+    integrations.router,
+    prefix="/integrations",
+    tags=["Integrations"],
 )
 
 # TODO: Add reports router when implemented

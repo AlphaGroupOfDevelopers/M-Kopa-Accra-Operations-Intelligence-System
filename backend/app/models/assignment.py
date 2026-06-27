@@ -41,7 +41,8 @@ class Assignment(Base, TimestampMixin):
         start_date: Assignment start date
         end_date: Assignment end date (None if current)
         status: Assignment status
-        role: Agent's role at the shop
+        team_name: Team name for this assignment
+        role: Agent's role at the shop (Main DSR, Supporting DSR)
         notes: Additional assignment notes
         agent: Relationship to Agent
         shop: Relationship to Shop
@@ -68,6 +69,7 @@ class Assignment(Base, TimestampMixin):
         nullable=False,
         index=True
     )
+    team_name: Mapped[str | None] = mapped_column(String(100), nullable=True)
     role: Mapped[str | None] = mapped_column(String(100), nullable=True)
     notes: Mapped[str | None] = mapped_column(Text, nullable=True)
 

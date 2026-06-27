@@ -150,20 +150,20 @@ def get_agent(
 
 
 @router.get(
-    "/employee/{employee_id}",
+    "/account/{account_number}",
     response_model=AgentRead,
-    summary="Get agent by employee ID",
+    summary="Get agent by account number",
 )
-def get_agent_by_employee_id(
-    employee_id: str,
+def get_agent_by_account_number(
+    account_number: str,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_active_user),
 ) -> AgentRead:
     """
-    Get agent details by employee ID.
+    Get agent details by account number.
 
     Args:
-        employee_id: Employee ID
+        account_number: Account number (primary phone)
         db: Database session
         current_user: Current authenticated user
 
@@ -173,11 +173,11 @@ def get_agent_by_employee_id(
     Raises:
         HTTPException: If agent not found
     """
-    agent = TeamService.get_agent_by_employee_id(db, employee_id)
+    agent = TeamService.get_agent_by_account_number(db, account_number)
     if not agent:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Agent with employee ID {employee_id} not found",
+            detail=f"Agent with account number {account_number} not found",
         )
     return agent
 

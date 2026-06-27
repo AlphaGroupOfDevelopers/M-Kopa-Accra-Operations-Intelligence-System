@@ -15,8 +15,6 @@ class ShopBase(BaseModel):
     location: str = Field(..., min_length=1, max_length=500, description="Physical location")
     region: str = Field("Greater Accra", max_length=100, description="Region")
     district: Optional[str] = Field(None, max_length=100, description="District")
-    latitude: Optional[float] = Field(None, ge=-90, le=90, description="GPS latitude")
-    longitude: Optional[float] = Field(None, ge=-180, le=180, description="GPS longitude")
     description: Optional[str] = Field(None, description="Shop description")
     is_active: bool = Field(True, description="Active status")
 
@@ -34,8 +32,6 @@ class ShopUpdate(BaseModel):
     location: Optional[str] = Field(None, min_length=1, max_length=500)
     region: Optional[str] = Field(None, max_length=100)
     district: Optional[str] = Field(None, max_length=100)
-    latitude: Optional[float] = Field(None, ge=-90, le=90)
-    longitude: Optional[float] = Field(None, ge=-180, le=180)
     description: Optional[str] = None
     is_active: Optional[bool] = None
 

@@ -1,4 +1,4 @@
-"""Team Service - Business logic for agent/team member management."""
+"""Team Service - Business logic for DSR (agent) management."""
 
 from typing import List, Optional
 
@@ -9,12 +9,12 @@ from app.schemas.agent import AgentCreate, AgentUpdate
 
 
 class TeamService:
-    """Service for managing team members (agents)."""
+    """Service for managing team members (DSR/agents)."""
 
     @staticmethod
     def create_agent(db: Session, agent_data: AgentCreate) -> Agent:
         """
-        Create a new agent.
+        Create a new agent/DSR.
 
         Args:
             db: Database session
@@ -24,12 +24,12 @@ class TeamService:
             Created agent
 
         Raises:
-            ValueError: If employee_id or email already exists
+            ValueError: If account_number or email already exists
         """
-        # Check if employee_id already exists
-        existing = db.query(Agent).filter(Agent.employee_id == agent_data.employee_id).first()
+        # Check if account_number already exists
+        existing = db.query(Agent).filter(Agent.account_number == agent_data.account_number).first()
         if existing:
-            raise ValueError(f"Employee ID {agent_data.employee_id} already exists")
+            raise ValueError(f"Account number {agent_data.account_number} already exists")
 
         # Check if email already exists (if provided)
         if agent_data.email:
@@ -50,10 +50,10 @@ class TeamService:
         return db.query(Agent).filter(Agent.id == agent_id, Agent.deleted_at.is_(None)).first()
 
     @staticmethod
-    def get_agent_by_employee_id(db: Session, employee_id: str) -> Optional[Agent]:
-        """Get agent by employee ID."""
+    def get_agent_by_account_number(db: Session, account_number: str) -> Optional[Agent]:
+        """Get agent by account number."""
         return db.query(Agent).filter(
-            Agent.employee_id == employee_id,
+            Agent.account_number == account_number,
             Agent.deleted_at.is_(None)
         ).first()
 
@@ -135,7 +135,7 @@ class TeamService:
     @staticmethod
     def search_agents(db: Session, search_term: str, limit: int = 50) -> List[Agent]:
         """
-        Search agents by name, employee ID, or email.
+        Search agents by name, account number, or email.
 
         Args:
             db: Database session
@@ -151,9 +151,8 @@ class TeamService:
             .filter(
                 Agent.deleted_at.is_(None),
                 (
-                    Agent.first_name.ilike(search_pattern)
-                    | Agent.last_name.ilike(search_pattern)
-                    | Agent.employee_id.ilike(search_pattern)
+                    Agent.full_name.ilike(search_pattern)
+                    | Agent.account_number.ilike(search_pattern)
                     | Agent.email.ilike(search_pattern)
                 ),
             )

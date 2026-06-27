@@ -2,7 +2,7 @@
 
 from typing import List
 
-from sqlalchemy import String, Text, Float, Integer
+from sqlalchemy import String, Text, Integer
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base import Base, TimestampMixin, SoftDeleteMixin
@@ -19,10 +19,8 @@ class Shop(Base, TimestampMixin, SoftDeleteMixin):
         location: Physical address/location
         region: Geographic region (e.g., Greater Accra)
         district: District within region
-        latitude: GPS latitude coordinate
-        longitude: GPS longitude coordinate
         description: Additional shop information
-        is_active: Whether shop is currently operational
+        is_active: Whether shop is currently operational (defaults to True)
         assignments: Relationship to agent assignments
         sales_records: Relationship to sales records
     """
@@ -35,10 +33,8 @@ class Shop(Base, TimestampMixin, SoftDeleteMixin):
     location: Mapped[str] = mapped_column(String(500), nullable=False)
     region: Mapped[str] = mapped_column(String(100), nullable=False, default="Greater Accra")
     district: Mapped[str | None] = mapped_column(String(100), nullable=True)
-    latitude: Mapped[float | None] = mapped_column(Float, nullable=True)
-    longitude: Mapped[float | None] = mapped_column(Float, nullable=True)
     description: Mapped[str | None] = mapped_column(Text, nullable=True)
-    is_active: Mapped[bool] = mapped_column(default=True, nullable=False)
+    is_active: Mapped[bool] = mapped_column(default=True, nullable=False, server_default="true")
 
     # Relationships
     assignments: Mapped[List["Assignment"]] = relationship(

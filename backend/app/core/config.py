@@ -55,9 +55,17 @@ class Settings(BaseSettings):
     GOOGLE_FORMS_WEBHOOK_SECRET: Optional[str] = None
     MICROSOFT_FORMS_WEBHOOK_SECRET: Optional[str] = None
 
+    # Google Sheets Integration
+    GOOGLE_SHEETS_CREDENTIALS_FILE: Optional[str] = "./credentials/google-credentials.json"
+    GOOGLE_SHEET_ID: Optional[str] = None
+    GOOGLE_SHEET_NAME: Optional[str] = "Form Responses 1"
+    SYNC_INTERVAL_HOURS: int = 4
+    LAST_PROCESSED_ROW_KEY: str = "last_processed_row"
+
     # Storage
     FILE_STORAGE_PATH: str = "./storage"
     REPORTS_STORAGE_PATH: str = "./storage/reports"
+    QR_CODES_STORAGE_PATH: str = "./storage/qr_codes"
 
     # Logging
     LOG_LEVEL: str = "INFO"
