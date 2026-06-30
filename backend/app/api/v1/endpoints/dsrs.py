@@ -163,7 +163,7 @@ def get_dsr_by_account_number(
     Get DSR details by account number.
 
     Args:
-        account_number: Account Number
+        account_number: Account number
         db: Database session
         current_user: Current authenticated user
 

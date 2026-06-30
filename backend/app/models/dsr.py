@@ -34,11 +34,10 @@ class DSR(Base, TimestampMixin, SoftDeleteMixin):
 
     Attributes:
         id: Primary key
-        account_number: Unique account identifier
-        first_name: DSR's first name
-        last_name: DSR's last name
+        account_number: Unique account number (also serves as primary phone number)
+        full_name: DSR's full name
         email: Email address
-        phone: Contact phone number
+        secondary_number: Alternative contact number
         date_of_birth: Date of birth
         gender: Gender
         address: Residential address
@@ -46,8 +45,7 @@ class DSR(Base, TimestampMixin, SoftDeleteMixin):
         education_institution: Name of educational institution
         education_year: Year of graduation/completion
         employment_date: Date of employment with M-Kopa
-        employment_status: Current employment status
-        national_id: National identification number
+        employment_status: Current employment status (defaults to ACTIVE)
         emergency_contact_name: Emergency contact person
         emergency_contact_phone: Emergency contact phone
         notes: Additional notes about the DSR
@@ -58,17 +56,15 @@ class DSR(Base, TimestampMixin, SoftDeleteMixin):
     __tablename__ = "dsrs"
 
     id: Mapped[int] = mapped_column(primary_key=True, index=True)
-    account_number: Mapped[str] = mapped_column(String(50), unique=True, index=True, nullable=False)
-    first_name: Mapped[str] = mapped_column(String(100), nullable=False)
-    last_name: Mapped[str] = mapped_column(String(100), nullable=False)
+    account_number: Mapped[str] = mapped_column(String(20), unique=True, index=True, nullable=False)
+    full_name: Mapped[str] = mapped_column(String(255), nullable=False)
     email: Mapped[str | None] = mapped_column(String(255), unique=True, index=True, nullable=True)
-    phone: Mapped[str] = mapped_column(String(20), nullable=False)
+    secondary_number: Mapped[str | None] = mapped_column(String(20), nullable=True)
 
     # Personal Information
     date_of_birth: Mapped[date | None] = mapped_column(Date, nullable=True)
     gender: Mapped[str | None] = mapped_column(String(20), nullable=True)
     address: Mapped[str | None] = mapped_column(Text, nullable=True)
-    national_id: Mapped[str | None] = mapped_column(String(50), unique=True, nullable=True)
 
     # Education
     education_level: Mapped[EducationLevel | None] = mapped_column(
@@ -83,7 +79,8 @@ class DSR(Base, TimestampMixin, SoftDeleteMixin):
     employment_status: Mapped[EmploymentStatus] = mapped_column(
         SQLEnum(EmploymentStatus, name="employment_status_enum", create_constraint=True),
         default=EmploymentStatus.ACTIVE,
-        nullable=False
+        nullable=False,
+        server_default="active"
     )
 
     # Emergency Contact
@@ -107,11 +104,7 @@ class DSR(Base, TimestampMixin, SoftDeleteMixin):
     )
 
     @property
-    def full_name(self) -> str:
-        """Get DSR's full name."""
-        return f"{self.first_name} {self.last_name}"
 
-    @property
     def current_assignment(self) -> Optional["Assignment"]:
         """Get DSR's current active assignment."""
         for assignment in self.assignments:

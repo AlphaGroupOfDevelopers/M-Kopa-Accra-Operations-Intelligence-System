@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: mkopa-aois-api
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: DATABASE_URL
+        value: postgresql://46b658d71385134b061db8ee0ae0c0375b71b86bf8e6419b47b9532bce40b970:sk_stywoc0e3B6Qydyw384X6@pooled.db.prisma.io:5432/postgres?sslmode=require
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: "False"
+      - key: ENVIRONMENT
+        value: production
