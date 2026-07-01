@@ -63,7 +63,7 @@ export default function Login() {
           </div>
 
           <div className="login-native-input-group">
-            <label className="login-native-label">5-Digit Password</label>
+            <label className="login-native-label">Password</label>
             <input
               type={showPassword ? "text" : "password"}
               value={password}
