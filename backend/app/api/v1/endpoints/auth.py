@@ -8,11 +8,20 @@ from app.api.deps import get_current_active_user, get_db
 from app.core.security import (
     create_access_token,
     create_refresh_token,
+    create_reset_token,
+    get_password_hash,
     verify_password,
     verify_token,
 )
 from app.models.user import User
-from app.schemas.auth import LoginRequest, Token, TokenRefresh
+from app.schemas.auth import (
+    LoginRequest, 
+    Token, 
+    TokenRefresh, 
+    ForgotPasswordRequest, 
+    ForgotPasswordResponse, 
+    ResetPasswordRequest
+)
 from app.schemas.user import UserProfile
 
 router = APIRouter()
@@ -170,3 +179,59 @@ def get_profile(
         User profile data
     """
     return current_user
+
+
+@router.post("/forgot-password", response_model=ForgotPasswordResponse, summary="Request password reset")
+def forgot_password(
+    request: ForgotPasswordRequest,
+    db: Session = Depends(get_db),
+) -> ForgotPasswordResponse:
+    """
+    Request a password reset token.
+    """
+    email = f"{request.account_number}@m-kopa.com"
+    user = db.query(User).filter(User.email == email).first()
+
+    if not user or not user.is_active:
+        # Return success anyway to prevent username enumeration
+        return ForgotPasswordResponse(
+            message="If an active account exists, a reset link has been generated."
+        )
+
+    # Generate token
+    reset_token = create_reset_token(subject=str(user.id))
+
+    # In a real app, send an email here.
+    # For this internal tool, we return the token directly so the frontend can redirect.
+    return ForgotPasswordResponse(
+        message="Reset token generated successfully.",
+        reset_token=reset_token
+    )
+
+
+@router.post("/reset-password", summary="Reset password")
+def reset_password(
+    request: ResetPasswordRequest,
+    db: Session = Depends(get_db),
+) -> dict:
+    """
+    Reset user password using token.
+    """
+    user_id = verify_token(request.token, token_type="reset")
+    if user_id is None:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Invalid or expired reset token",
+        )
+
+    user = db.query(User).filter(User.id == int(user_id)).first()
+    if not user or not user.is_active:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User not found or inactive",
+        )
+
+    user.hashed_password = get_password_hash(request.new_password)
+    db.commit()
+
+    return {"message": "Password reset successfully"}

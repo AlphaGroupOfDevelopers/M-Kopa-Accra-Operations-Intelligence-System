@@ -49,6 +49,16 @@ def create_refresh_token(subject: str | Any) -> str:
     return encoded_jwt
 
 
+def create_reset_token(subject: str | Any) -> str:
+    """
+    Create a JWT reset token.
+    """
+    expire = datetime.utcnow() + timedelta(hours=1)
+    to_encode = {"exp": expire, "sub": str(subject), "type": "reset"}
+    encoded_jwt = jwt.encode(to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
+    return encoded_jwt
+
+
 def verify_token(token: str, token_type: str = "access") -> Optional[str]:
     """
     Verify and decode a JWT token.

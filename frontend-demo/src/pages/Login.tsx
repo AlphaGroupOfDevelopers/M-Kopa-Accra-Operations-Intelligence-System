@@ -84,12 +84,14 @@ export default function Login() {
 
           {error && <div className="login-native-error">{error}</div>}
 
-          <div className="login-native-options">
-            <label className="login-native-checkbox">
-              <input type="checkbox" />
-              <span>Remember me</span>
-            </label>
-            <a href="#" className="login-native-forgot">Forgot Password?</a>
+          <div className="login-native-options" style={{ justifyContent: 'flex-end' }}>
+            <span 
+              className="login-native-forgot" 
+              onClick={() => navigate('/forgot-password')}
+              style={{ cursor: 'pointer' }}
+            >
+              Forgot Password?
+            </span>
           </div>
 
           <button type="submit" className="login-native-btn">

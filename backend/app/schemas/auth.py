@@ -24,6 +24,26 @@ class LoginRequest(BaseModel):
     password: str = Field(..., min_length=5, max_length=5, description="5-Digit password")
 
 
+class ForgotPasswordRequest(BaseModel):
+    """Forgot password request."""
+
+    account_number: str = Field(..., description="User account number")
+
+
+class ForgotPasswordResponse(BaseModel):
+    """Forgot password response."""
+
+    message: str = Field(..., description="Status message")
+    reset_token: str | None = Field(None, description="Password reset token (for direct redirection)")
+
+
+class ResetPasswordRequest(BaseModel):
+    """Reset password request."""
+
+    token: str = Field(..., description="Password reset token")
+    new_password: str = Field(..., min_length=5, max_length=5, description="New 5-Digit password")
+
+
 class TokenPayload(BaseModel):
     """JWT token payload."""
 

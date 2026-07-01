@@ -15,6 +15,8 @@ const ExecutiveDashboard = React.lazy(() => import('./pages/ExecutiveDashboard')
 const DataEntry = React.lazy(() => import('./pages/DataEntry'));
 const MoreMenu = React.lazy(() => import('./pages/MoreMenu'));
 const DecisionIntelligence = React.lazy(() => import('./pages/DecisionIntelligence'));
+const ForgotPassword = React.lazy(() => import('./pages/ForgotPassword'));
+const ResetPassword = React.lazy(() => import('./pages/ResetPassword'));
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated } = useAppContext();
@@ -34,6 +36,8 @@ function AppRoutes() {
       <Suspense fallback={<LoadingFallback />}>
         <Routes>
           <Route path="/login" element={<Login />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
           <Route
             path="/"
             element={
