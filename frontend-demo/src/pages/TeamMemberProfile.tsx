@@ -67,8 +67,10 @@ export default function TeamMemberProfile() {
       };
     });
 
-    // Calculate total sales
-    const totalSales = assignmentPerformance.reduce((sum, item) => sum + item.sales, 0);
+    // Calculate total sales directly from all sales records to ensure no sales are missed due to missing assignments
+    const totalSales = salesRecords
+      .filter(r => r.agentId === agent.id)
+      .reduce((sum, r) => sum + r.devicesSold, 0);
 
     // Last 14 days trend
     const trendData = [];
@@ -182,6 +184,43 @@ export default function TeamMemberProfile() {
               </div>
             </div>
           )}
+          {agent.gender && (
+            <div className="profile-info-item">
+              <User className="profile-info-icon" size={20} />
+              <div>
+                <p className="profile-info-label">Gender</p>
+                <p className="profile-info-value">{agent.gender}</p>
+              </div>
+            </div>
+          )}
+          {agent.secondaryNumber && (
+            <div className="profile-info-item">
+              <Phone className="profile-info-icon" size={20} />
+              <div>
+                <p className="profile-info-label">Alt. Contact</p>
+                <p className="profile-info-value">{agent.secondaryNumber}</p>
+              </div>
+            </div>
+          )}
+          {agent.emergencyContactName && (
+            <div className="profile-info-item" style={{ gridColumn: '1 / -1' }}>
+              <User className="profile-info-icon" size={20} />
+              <div>
+                <p className="profile-info-label">Emergency Contact</p>
+                <p className="profile-info-value">{agent.emergencyContactName}</p>
+                {agent.emergencyContactPhone && <p style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>{agent.emergencyContactPhone}</p>}
+              </div>
+            </div>
+          )}
+          {agent.notes && (
+            <div className="profile-info-item" style={{ gridColumn: '1 / -1' }}>
+              <Hash className="profile-info-icon" size={20} />
+              <div>
+                <p className="profile-info-label">Notes</p>
+                <p className="profile-info-value" style={{ fontSize: '0.85rem' }}>{agent.notes}</p>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
@@ -201,7 +240,7 @@ export default function TeamMemberProfile() {
         </div>
         <div className="card profile-stat-card">
           <p className="profile-stat-label">Shop Transfers</p>
-          <p className="profile-stat-value">{agentData.agentAssignments.length - 1}</p>
+          <p className="profile-stat-value">{Math.max(0, agentData.agentAssignments.length - 1)}</p>
           <p className="profile-stat-subtext">total transfers</p>
         </div>
       </div>

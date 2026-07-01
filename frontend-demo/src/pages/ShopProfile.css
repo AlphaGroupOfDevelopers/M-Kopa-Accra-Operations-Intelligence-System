@@ -326,4 +326,24 @@
     padding: 0.25rem 0.5rem;
     font-size: 0.7rem;
   }
+
+  .profile-info-grid {
+    gap: 0.5rem;
+    padding-top: 1rem;
+    margin-top: 1rem;
+  }
+
+  .profile-info-label {
+    font-size: 0.65rem;
+  }
+
+  .profile-info-value {
+    font-size: 0.75rem;
+  }
+
+  .profile-info-icon {
+    width: 16px;
+    height: 16px;
+    margin-right: 0.5rem;
+  }
 }

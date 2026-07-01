@@ -11,6 +11,11 @@ export interface Agent {
   digitalAddress?: string;
   photo?: string;
   role?: 'main' | 'assistant';
+  secondaryNumber?: string;
+  gender?: string;
+  emergencyContactName?: string;
+  emergencyContactPhone?: string;
+  notes?: string;
 }
 
 export interface Shop {
@@ -21,6 +26,8 @@ export interface Shop {
   shopCode: string;
   status: 'active' | 'inactive';
   baseTraffic?: number;
+  district?: string;
+  description?: string;
 }
 
 export interface Assignment {

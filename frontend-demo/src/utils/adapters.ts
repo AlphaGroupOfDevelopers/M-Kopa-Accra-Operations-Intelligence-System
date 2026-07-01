@@ -5,13 +5,24 @@ export const adaptAgent = (data: any): Agent => {
     id: data.id.toString(),
     name: data.full_name,
     email: data.email || '',
-    phone: data.account_number,
+    phone: (data.account_number && !data.account_number.startsWith('0') && !data.account_number.startsWith('+')) 
+      ? '0' + data.account_number 
+      : (data.account_number || ''),
     dateOfBirth: data.date_of_birth || '',
     education: data.education_level || '',
     employmentDate: data.employment_date || '',
     currentShopId: data.current_assignment?.shop_id?.toString() || '',
     status: data.employment_status === 'active' ? 'active' : 'inactive',
     digitalAddress: data.address || '',
+    gender: data.gender || '',
+    secondaryNumber: (data.secondary_number && !data.secondary_number.startsWith('0') && !data.secondary_number.startsWith('+')) 
+      ? '0' + data.secondary_number 
+      : (data.secondary_number || ''),
+    emergencyContactName: data.emergency_contact_name || '',
+    emergencyContactPhone: (data.emergency_contact_phone && !data.emergency_contact_phone.startsWith('0') && !data.emergency_contact_phone.startsWith('+')) 
+      ? '0' + data.emergency_contact_phone 
+      : (data.emergency_contact_phone || ''),
+    notes: data.notes || '',
   };
 };
 
@@ -23,6 +34,8 @@ export const adaptShop = (data: any): Shop => {
     region: data.region,
     shopCode: data.name.toUpperCase().replace(/\s+/g, '_'), // Mock shop code if not present
     status: data.is_active ? 'active' : 'inactive',
+    district: data.district || '',
+    description: data.description || '',
   };
 };
 

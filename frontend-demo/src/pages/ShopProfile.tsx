@@ -162,6 +162,24 @@ export default function ShopProfile() {
               <p className="profile-info-value">{shop.region}</p>
             </div>
           </div>
+          {shop.district && (
+            <div className="profile-info-item">
+              <MapPin className="profile-info-icon" size={20} />
+              <div>
+                <p className="profile-info-label">District</p>
+                <p className="profile-info-value">{shop.district}</p>
+              </div>
+            </div>
+          )}
+          {shop.description && (
+            <div className="profile-info-item" style={{ gridColumn: '1 / -1' }}>
+              <Store className="profile-info-icon" size={20} />
+              <div>
+                <p className="profile-info-label">Description</p>
+                <p className="profile-info-value" style={{ fontSize: '0.85rem' }}>{shop.description}</p>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 

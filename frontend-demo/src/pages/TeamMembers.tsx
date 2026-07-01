@@ -14,6 +14,7 @@ export default function TeamMembers() {
   
   const [searchTerm, setSearchTerm] = useState('');
   const [sortOrder, setSortOrder] = useState('high');
+  const [genderFilter, setGenderFilter] = useState('all');
 
   const agentsWithStats = useMemo(() => {
     const last7Days = format(subDays(new Date(), 7), 'yyyy-MM-dd');
@@ -31,14 +32,23 @@ export default function TeamMembers() {
         avgDailySales: (agentSales / 7).toFixed(1),
         currentShopName: currentShop?.name || 'Unknown',
       };
-    }).sort((a, b) => sortOrder === 'high' ? b.totalSales - a.totalSales : a.totalSales - b.totalSales);
+    }).sort((a, b) => {
+      if (sortOrder === 'youngest' || sortOrder === 'oldest') {
+        const dateA = (a.dateOfBirth && !isNaN(new Date(a.dateOfBirth).getTime())) ? new Date(a.dateOfBirth).getTime() : (sortOrder === 'youngest' ? 0 : Infinity);
+        const dateB = (b.dateOfBirth && !isNaN(new Date(b.dateOfBirth).getTime())) ? new Date(b.dateOfBirth).getTime() : (sortOrder === 'youngest' ? 0 : Infinity);
+        return sortOrder === 'youngest' ? dateB - dateA : dateA - dateB;
+      }
+      return sortOrder === 'high' ? b.totalSales - a.totalSales : a.totalSales - b.totalSales;
+    });
   }, [agents, salesRecords, shops, sortOrder]);
 
-  const filteredAgents = agentsWithStats.filter(agent =>
-    agent.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    agent.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    agent.currentShopName.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredAgents = agentsWithStats.filter(agent => {
+    const matchesSearch = agent.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      agent.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      agent.currentShopName.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesGender = genderFilter === 'all' || (agent.gender && agent.gender.toLowerCase() === genderFilter);
+    return matchesSearch && matchesGender;
+  });
 
   return (
     <div className="dashboard-container">
@@ -67,6 +77,16 @@ export default function TeamMembers() {
             />
           </div>
           <select 
+            value={genderFilter} 
+            onChange={(e) => setGenderFilter(e.target.value)} 
+            className="shops-search-input" 
+            style={{ width: 'auto', paddingLeft: '1rem', cursor: 'pointer' }}
+          >
+            <option value="all">All Genders</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+          </select>
+          <select 
             value={sortOrder} 
             onChange={(e) => setSortOrder(e.target.value)} 
             className="shops-search-input" 
@@ -74,6 +94,8 @@ export default function TeamMembers() {
           >
             <option value="high">High Selling</option>
             <option value="low">Low Selling</option>
+            <option value="youngest">Youngest</option>
+            <option value="oldest">Oldest</option>
           </select>
         </div>
       </div>

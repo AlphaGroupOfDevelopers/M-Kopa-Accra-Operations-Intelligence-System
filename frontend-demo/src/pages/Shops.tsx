@@ -35,7 +35,11 @@ export default function Shops() {
         agentCount: currentAgents.length,
         avgDailySales: avgDaily,
       };
-    }).sort((a, b) => sortOrder === 'high' ? b.totalSales - a.totalSales : a.totalSales - b.totalSales);
+    }).sort((a, b) => {
+      if (sortOrder === 'largest-team') return b.agentCount - a.agentCount;
+      if (sortOrder === 'smallest-team') return a.agentCount - b.agentCount;
+      return sortOrder === 'high' ? b.totalSales - a.totalSales : a.totalSales - b.totalSales;
+    });
   }, [shops, salesRecords, agents, sortOrder]);
 
   const filteredShops = shopsWithStats.filter(shop =>
@@ -78,6 +82,8 @@ export default function Shops() {
           >
             <option value="high">High Selling</option>
             <option value="low">Low Selling</option>
+            <option value="largest-team">Largest Team</option>
+            <option value="smallest-team">Smallest Team</option>
           </select>
         </div>
       </div>
