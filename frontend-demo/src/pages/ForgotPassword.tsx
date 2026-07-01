@@ -67,7 +67,7 @@ export default function ForgotPassword() {
 
           {error && <div className="login-native-error">{error}</div>}
 
-          <button type="submit" className="login-native-btn" disabled={loading}>
+          <button type="submit" className="login-native-submit" disabled={loading}>
             {loading ? 'Processing...' : 'Reset Password'}
           </button>
           

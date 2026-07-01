@@ -124,7 +124,7 @@ export default function ResetPassword() {
           {error && <div className="login-native-error">{error}</div>}
           {success && <div className="login-native-error" style={{ color: 'green', backgroundColor: '#e6ffe6' }}>{success}</div>}
 
-          <button type="submit" className="login-native-btn" disabled={loading || !token}>
+          <button type="submit" className="login-native-submit" disabled={loading || !token}>
             {loading ? 'Updating...' : 'Update Password'}
           </button>
           

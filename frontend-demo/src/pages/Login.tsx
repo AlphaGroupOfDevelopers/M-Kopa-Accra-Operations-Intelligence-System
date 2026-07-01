@@ -27,11 +27,15 @@ export default function Login() {
       return;
     }
     
-    const success = await login(accountNumber, password);
-    if (success) {
-      navigate('/');
-    } else {
-      setError('Invalid credentials');
+    try {
+      const success = await login(accountNumber, password);
+      if (success) {
+        navigate('/');
+      } else {
+        setError('Account number or password is incorrect.');
+      }
+    } catch (err) {
+      setError('An error occurred during login. Please try again.');
     }
   };
 
@@ -39,7 +43,7 @@ export default function Login() {
     <div className="login-native-container">
       {/* Top Header */}
       <div className="login-native-topbar">
-        <span className="login-native-top-title">Login</span>
+        <span className="login-native-top-title">Operations Intelligence</span>
       </div>
 
       <div className="login-native-content">
@@ -47,7 +51,7 @@ export default function Login() {
           <img src="/logo.png" alt="M-Kopa" className="login-native-logo" />
         </div>
 
-        <h1 className="login-native-heading">LOGIN</h1>
+        <h1 className="login-native-heading" style={{ fontSize: '20px' }}>LOGIN</h1>
 
         <form onSubmit={handleSubmit} className="login-native-form">
           <div className="login-native-input-group">
@@ -64,22 +68,24 @@ export default function Login() {
 
           <div className="login-native-input-group">
             <label className="login-native-label">Password</label>
-            <input
-              type={showPassword ? "text" : "password"}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="login-native-input"
-              placeholder="12345"
-              maxLength={5}
-              required
-            />
-            <button 
-              type="button" 
-              className="login-native-eye-btn"
-              onClick={() => setShowPassword(!showPassword)}
-            >
-              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-            </button>
+            <div style={{ position: 'relative' }}>
+              <input
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="login-native-input"
+                placeholder="12345"
+                required
+              />
+              <button 
+                type="button" 
+                className="login-native-eye-btn"
+                style={{ position: 'absolute', right: '15px', top: '50%', transform: 'translateY(-50%)' }}
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </button>
+            </div>
           </div>
 
           {error && <div className="login-native-error">{error}</div>}
@@ -94,7 +100,7 @@ export default function Login() {
             </span>
           </div>
 
-          <button type="submit" className="login-native-btn">
+          <button type="submit" className="login-native-submit">
             Login
           </button>
         </form>
