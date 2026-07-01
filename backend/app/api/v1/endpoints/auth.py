@@ -36,14 +36,15 @@ def login(
     Raises:
         HTTPException: If credentials are invalid
     """
-    # Find user by email
-    user = db.query(User).filter(User.email == login_data.email).first()
+    # Find user by appending the default domain to the account number
+    email = f"{login_data.account_number}@m-kopa.com"
+    user = db.query(User).filter(User.email == email).first()
 
     # Verify user exists and password is correct
     if not user or not verify_password(login_data.password, user.hashed_password):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect email or password",
+            detail="Incorrect account number or password",
             headers={"WWW-Authenticate": "Bearer"},
         )
 

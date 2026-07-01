@@ -20,8 +20,8 @@ class TokenRefresh(BaseModel):
 class LoginRequest(BaseModel):
     """Login request."""
 
-    email: EmailStr = Field(..., description="User email")
-    password: str = Field(..., min_length=6, description="User password")
+    account_number: str = Field(..., description="User account number")
+    password: str = Field(..., min_length=5, max_length=5, description="5-Digit password")
 
 
 class TokenPayload(BaseModel):

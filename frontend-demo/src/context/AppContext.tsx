@@ -3,7 +3,7 @@ import { api } from '../services/api';
 
 interface AppContextType {
   isAuthenticated: boolean;
-  login: (email: string, password: string) => Promise<boolean>;
+  login: (accountNumber: string, password: string) => Promise<boolean>;
   logout: () => void;
   currentUser: { name: string; email: string; role: string } | null;
 }
@@ -28,17 +28,11 @@ export function AppProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  const login = async (email: string, password: string) => {
+  const login = async (accountNumber: string, password: string) => {
     try {
-      // FastAPI OAuth2PasswordRequestForm expects x-www-form-urlencoded
-      const formData = new URLSearchParams();
-      formData.append('username', email);
-      formData.append('password', password);
-      
-      const response = await api.post('/auth/login', formData, {
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
+      const response = await api.post('/auth/login', {
+        account_number: accountNumber,
+        password: password
       });
       
       const { access_token } = response.data;
@@ -47,7 +41,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
       setIsAuthenticated(true);
       setCurrentUser({
         name: 'Operations Manager',
-        email: email,
+        email: accountNumber,
         role: 'Operations Manager',
       });
       return true;

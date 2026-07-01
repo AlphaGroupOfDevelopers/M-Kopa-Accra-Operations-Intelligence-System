@@ -5,7 +5,7 @@ import { Eye, EyeOff } from 'lucide-react';
 import './Login.css';
 
 export default function Login() {
-  const [email, setEmail] = useState('');
+  const [accountNumber, setAccountNumber] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
@@ -17,12 +17,17 @@ export default function Login() {
     e.preventDefault();
     setError('');
     
-    if (!email || !password) {
-      setError('Please enter both email and password');
+    if (!accountNumber || !password) {
+      setError('Please enter both account number and password');
+      return;
+    }
+
+    if (password.length !== 5) {
+      setError('Password must be exactly 5 digits');
       return;
     }
     
-    const success = await login(email, password);
+    const success = await login(accountNumber, password);
     if (success) {
       navigate('/');
     } else {
@@ -46,25 +51,26 @@ export default function Login() {
 
         <form onSubmit={handleSubmit} className="login-native-form">
           <div className="login-native-input-group">
-            <label className="login-native-label">Email Address</label>
+            <label className="login-native-label">Account Number</label>
             <input
               type="text"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={accountNumber}
+              onChange={(e) => setAccountNumber(e.target.value)}
               className="login-native-input"
-              placeholder="manager@mkopa.com"
+              placeholder="e.g., 263713288"
               required
             />
           </div>
 
           <div className="login-native-input-group">
-            <label className="login-native-label">Password</label>
+            <label className="login-native-label">5-Digit Password</label>
             <input
               type={showPassword ? "text" : "password"}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="login-native-input"
-              placeholder="Password"
+              placeholder="12345"
+              maxLength={5}
               required
             />
             <button 
