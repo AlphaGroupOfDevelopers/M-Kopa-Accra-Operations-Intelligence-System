@@ -175,12 +175,12 @@ export default function ShopProfile() {
         <div className="card profile-stat-card">
           <p className="profile-stat-label">Current Team Size</p>
           <p className="profile-stat-value">{shopData.currentAgents.length}</p>
-          <p className="profile-stat-subtext">active agents</p>
+          <p className="profile-stat-subtext">active DSRs</p>
         </div>
         <div className="card profile-stat-card">
           <p className="profile-stat-label">Total Staff History</p>
           <p className="profile-stat-value">{shopData.allAgentsWhoWorkedHere.length}</p>
-          <p className="profile-stat-subtext">agents worked here</p>
+          <p className="profile-stat-subtext">DSRs worked here</p>
         </div>
       </div>
 
@@ -244,7 +244,7 @@ export default function ShopProfile() {
                 <div className="profile-history-header">
                   <div>
                     <div className="profile-history-agent">
-                      <h3 className="profile-history-name">{item.agent?.name || 'Unknown Agent'}</h3>
+                      <h3 className="profile-history-name">{item.agent?.name || 'Unknown DSR'}</h3>
                       <span className={`profile-history-status ${item.status === 'Current' ? 'current' : 'past'}`}>
                         {item.status}
                       </span>

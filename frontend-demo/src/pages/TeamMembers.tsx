@@ -45,11 +45,11 @@ export default function TeamMembers() {
       <div className="dashboard-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
           <h1 className="dashboard-title">Team Members</h1>
-          <p className="dashboard-subtitle">Manage and view agent profiles and performance</p>
+          <p className="dashboard-subtitle">Manage and view DSR profiles and performance</p>
         </div>
         <div className="team-header-actions">
           <Users size={20} style={{ marginRight: '0.5rem' }} />
-          <span>{agents.length} Active Agents</span>
+          <span>{agents.length} Active DSRs</span>
         </div>
       </div>
 
@@ -131,7 +131,7 @@ export default function TeamMembers() {
       {filteredAgents.length === 0 && (
         <div className="card team-empty-state">
           <Users className="team-empty-icon" size={48} />
-          <p className="team-empty-text">No agents found matching your search</p>
+          <p className="team-empty-text">No DSRs found matching your search</p>
         </div>
       )}
     </div>

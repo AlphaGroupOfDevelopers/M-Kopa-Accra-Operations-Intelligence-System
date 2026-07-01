@@ -114,7 +114,7 @@ export default function Shops() {
                 </div>
                 <div className="shop-info-item">
                   <Users size={14} className="shop-info-icon" />
-                  {shop.agentCount} Active Agents
+                  {shop.agentCount} Active DSRs
                 </div>
               </div>
 

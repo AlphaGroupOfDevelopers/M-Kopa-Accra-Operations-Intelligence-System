@@ -144,7 +144,7 @@ export default function Dashboard() {
         <div className="card metric-card">
           <div className="metric-header">
             <div>
-              <p className="metric-label">Active Agents</p>
+              <p className="metric-label">Active DSRs</p>
               <p className="metric-value">{agents.length}</p>
             </div>
             <div className="metric-icon-wrapper icon-purple">
@@ -235,7 +235,7 @@ export default function Dashboard() {
             <div className="metric-icon-wrapper icon-blue" style={{ padding: '0.5rem' }}>
               <Users size={20} />
             </div>
-            <h2 className="ranking-title">Top Agents (7 Days)</h2>
+            <h2 className="ranking-title">Top DSRs (7 Days)</h2>
           </div>
           <div className="ranking-list">
             {stats.agentPerformance.slice(0, 5).map((item, index) => (
@@ -260,7 +260,7 @@ export default function Dashboard() {
               </Link>
             ))}
           </div>
-          <Link to="/team-members" className="see-more-link">See All Agents</Link>
+          <Link to="/team-members" className="see-more-link">See All DSRs</Link>
         </div>
       </div>
     </div>

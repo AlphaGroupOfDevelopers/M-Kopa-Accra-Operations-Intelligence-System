@@ -101,7 +101,7 @@ export default function TeamMemberProfile() {
   if (!agent || !agentData) {
     return (
       <div className="card" style={{ textAlign: 'center', padding: '3rem 0' }}>
-        <p style={{ color: 'var(--text-secondary)' }}>Agent not found</p>
+        <p style={{ color: 'var(--text-secondary)' }}>DSR not found</p>
         <Link to="/team-members" style={{ color: 'var(--accent-red)', marginTop: '1rem', display: 'inline-block', textDecoration: 'none' }}>
           Back to Team Members
         </Link>
@@ -125,7 +125,7 @@ export default function TeamMemberProfile() {
             </div>
             <div className="profile-header-details">
               <h1 className="profile-title">{agent.name}</h1>
-              <p className="profile-subtitle">Sales Agent</p>
+              <p className="profile-subtitle">DSR</p>
               <div className="profile-location">
                 <MapPin size={16} style={{ marginRight: '0.25rem' }} />
                 <span>{currentShop?.name}</span>
