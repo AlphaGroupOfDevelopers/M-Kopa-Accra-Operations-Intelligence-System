@@ -12,7 +12,6 @@ import {
   Moon,
   Sun,
   Lightbulb,
-  FileText,
   Briefcase,
   Home
 } from 'lucide-react';
