@@ -10,6 +10,7 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   
+  const [isLoading, setIsLoading] = useState(false);
   const { login } = useAppContext();
   const navigate = useNavigate();
 
@@ -27,15 +28,18 @@ export default function Login() {
       return;
     }
     
+    setIsLoading(true);
     try {
       const success = await login(accountNumber, password);
       if (success) {
         navigate('/');
       } else {
         setError('Account number or password is incorrect.');
+        setIsLoading(false);
       }
     } catch (err) {
       setError('An error occurred during login. Please try again.');
+      setIsLoading(false);
     }
   };
 
@@ -63,6 +67,7 @@ export default function Login() {
               className="login-native-input"
               placeholder="e.g., 263713288"
               required
+              disabled={isLoading}
             />
           </div>
 
@@ -76,12 +81,14 @@ export default function Login() {
                 className="login-native-input"
                 placeholder="12345"
                 required
+                disabled={isLoading}
               />
               <button 
                 type="button" 
                 className="login-native-eye-btn"
                 style={{ position: 'absolute', right: '15px', top: '50%', transform: 'translateY(-50%)' }}
                 onClick={() => setShowPassword(!showPassword)}
+                disabled={isLoading}
               >
                 {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
               </button>
@@ -93,15 +100,15 @@ export default function Login() {
           <div className="login-native-options" style={{ justifyContent: 'flex-end' }}>
             <span 
               className="login-native-forgot" 
-              onClick={() => navigate('/forgot-password')}
-              style={{ cursor: 'pointer' }}
+              onClick={() => !isLoading && navigate('/forgot-password')}
+              style={{ cursor: isLoading ? 'default' : 'pointer', opacity: isLoading ? 0.7 : 1 }}
             >
               Forgot Password?
             </span>
           </div>
 
-          <button type="submit" className="login-native-submit">
-            Login
+          <button type="submit" className="login-native-submit" disabled={isLoading} style={{ opacity: isLoading ? 0.7 : 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            {isLoading ? <div className="button-spinner" /> : 'Login'}
           </button>
         </form>
       </div>

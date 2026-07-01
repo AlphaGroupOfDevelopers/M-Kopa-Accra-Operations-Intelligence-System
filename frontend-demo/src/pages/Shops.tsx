@@ -12,6 +12,7 @@ export default function Shops() {
   const { data: shops } = useShops();
   
   const [searchTerm, setSearchTerm] = useState('');
+  const [sortOrder, setSortOrder] = useState('high');
 
   const shopsWithStats = useMemo(() => {
     const last30Days = format(subDays(new Date(), 30), 'yyyy-MM-dd');
@@ -34,8 +35,8 @@ export default function Shops() {
         agentCount: currentAgents.length,
         avgDailySales: avgDaily,
       };
-    }).sort((a, b) => b.totalSales - a.totalSales);
-  }, [shops, salesRecords, agents]);
+    }).sort((a, b) => sortOrder === 'high' ? b.totalSales - a.totalSales : a.totalSales - b.totalSales);
+  }, [shops, salesRecords, agents, sortOrder]);
 
   const filteredShops = shopsWithStats.filter(shop =>
     shop.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -58,15 +59,26 @@ export default function Shops() {
 
       {/* Search */}
       <div className="card">
-        <div className="shops-search-wrapper">
-          <Search className="shops-search-icon" size={20} />
-          <input
-            type="text"
-            placeholder="Search by shop name, location, or code..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="shops-search-input"
-          />
+        <div className="shops-search-wrapper" style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+          <div style={{ position: 'relative', flex: 1, display: 'flex', alignItems: 'center' }}>
+            <Search className="shops-search-icon" size={20} />
+            <input
+              type="text"
+              placeholder="Search by shop name, location, or code..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="shops-search-input"
+            />
+          </div>
+          <select 
+            value={sortOrder} 
+            onChange={(e) => setSortOrder(e.target.value)} 
+            className="shops-search-input" 
+            style={{ width: 'auto', paddingLeft: '1rem', cursor: 'pointer' }}
+          >
+            <option value="high">High Selling</option>
+            <option value="low">Low Selling</option>
+          </select>
         </div>
       </div>
 
@@ -117,7 +129,7 @@ export default function Shops() {
                 </div>
               </div>
 
-              {index < 3 && (
+              {index < 3 && sortOrder === 'high' && (
                 <div className="shop-top-performer">
                   <TrendingUp size={14} style={{ marginRight: '0.25rem' }} />
                   Top {index + 1} Performer

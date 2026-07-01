@@ -61,7 +61,6 @@ export default function Layout() {
     { path: '/decision-intelligence', icon: Lightbulb, label: 'Recommendations' },
     { path: '/team-members', icon: Users, label: 'Team Management' },
     { path: '/shops', icon: Store, label: 'Shop Management' },
-    { path: '/data-entry', icon: FileText, label: 'Reports' },
   ];
 
   return (

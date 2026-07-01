@@ -13,6 +13,7 @@ export default function TeamMembers() {
   const { data: shops } = useShops();
   
   const [searchTerm, setSearchTerm] = useState('');
+  const [sortOrder, setSortOrder] = useState('high');
 
   const agentsWithStats = useMemo(() => {
     const last30Days = format(subDays(new Date(), 30), 'yyyy-MM-dd');
@@ -30,8 +31,8 @@ export default function TeamMembers() {
         avgDailySales: (agentSales / 30).toFixed(1),
         currentShopName: currentShop?.name || 'Unknown',
       };
-    }).sort((a, b) => b.totalSales - a.totalSales);
-  }, [agents, salesRecords, shops]);
+    }).sort((a, b) => sortOrder === 'high' ? b.totalSales - a.totalSales : a.totalSales - b.totalSales);
+  }, [agents, salesRecords, shops, sortOrder]);
 
   const filteredAgents = agentsWithStats.filter(agent =>
     agent.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -54,15 +55,26 @@ export default function TeamMembers() {
 
       {/* Search */}
       <div className="card">
-        <div className="shops-search-wrapper">
-          <Search className="shops-search-icon" size={20} />
-          <input
-            type="text"
-            placeholder="Search by name, email, or shop..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="shops-search-input"
-          />
+        <div className="shops-search-wrapper" style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+          <div style={{ position: 'relative', flex: 1, display: 'flex', alignItems: 'center' }}>
+            <Search className="shops-search-icon" size={20} />
+            <input
+              type="text"
+              placeholder="Search by name, email, or shop..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="shops-search-input"
+            />
+          </div>
+          <select 
+            value={sortOrder} 
+            onChange={(e) => setSortOrder(e.target.value)} 
+            className="shops-search-input" 
+            style={{ width: 'auto', paddingLeft: '1rem', cursor: 'pointer' }}
+          >
+            <option value="high">High Selling</option>
+            <option value="low">Low Selling</option>
+          </select>
         </div>
       </div>
 
@@ -97,7 +109,7 @@ export default function TeamMembers() {
                 </div>
                 <div className="team-agent-detail-item" style={{ width: '100%', marginTop: '0.25rem' }}>
                   <span style={{ marginRight: '0.5rem' }}>🎂</span>
-                  Born {format(new Date(agent.dateOfBirth), 'MMM dd, yyyy')}
+                  Born {agent.dateOfBirth && !isNaN(new Date(agent.dateOfBirth).getTime()) ? format(new Date(agent.dateOfBirth), 'MMM dd, yyyy') : 'Unknown'}
                 </div>
               </div>
 
@@ -125,4 +137,3 @@ export default function TeamMembers() {
     </div>
   );
 }
-

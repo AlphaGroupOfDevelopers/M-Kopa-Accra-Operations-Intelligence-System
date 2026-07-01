@@ -320,3 +320,10 @@
   font-weight: 700;
   color: var(--text-primary);
 }
+
+@media (max-width: 768px) {
+  .profile-status {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.7rem;
+  }
+}

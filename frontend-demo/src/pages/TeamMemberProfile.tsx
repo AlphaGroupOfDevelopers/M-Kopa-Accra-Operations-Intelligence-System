@@ -121,7 +121,7 @@ export default function TeamMemberProfile() {
         <div className="profile-header-card">
           <div className="profile-header-info">
             <div className="agent-header-icon">
-              {agent.name.split(' ').map(n => n[0]).join('')}
+              {agent.name.split(' ').map((n: string) => n[0]).join('')}
             </div>
             <div className="profile-header-details">
               <h1 className="profile-title">{agent.name}</h1>
@@ -156,14 +156,14 @@ export default function TeamMemberProfile() {
             <Calendar className="profile-info-icon" size={20} />
             <div>
               <p className="profile-info-label">Date of Birth</p>
-              <p className="profile-info-value">{format(new Date(agent.dateOfBirth), 'MMM dd, yyyy')}</p>
+              <p className="profile-info-value">{agent.dateOfBirth && !isNaN(new Date(agent.dateOfBirth).getTime()) ? format(new Date(agent.dateOfBirth), 'MMM dd, yyyy') : 'Unknown'}</p>
             </div>
           </div>
           <div className="profile-info-item">
             <User className="profile-info-icon" size={20} />
             <div>
               <p className="profile-info-label">Age</p>
-              <p className="profile-info-value">{differenceInYears(new Date(), new Date(agent.dateOfBirth))} years</p>
+              <p className="profile-info-value">{agent.dateOfBirth && !isNaN(new Date(agent.dateOfBirth).getTime()) ? differenceInYears(new Date(), new Date(agent.dateOfBirth)) + ' years' : 'Unknown'}</p>
             </div>
           </div>
           <div className="profile-info-item">
@@ -195,9 +195,9 @@ export default function TeamMemberProfile() {
         <div className="card profile-stat-card">
           <p className="profile-stat-label">Employment Duration</p>
           <p className="profile-stat-value">
-            {formatDistance(new Date(agent.employmentDate), new Date(), { addSuffix: false })}
+            {agent.employmentDate && !isNaN(new Date(agent.employmentDate).getTime()) ? formatDistance(new Date(agent.employmentDate), new Date(), { addSuffix: false }) : 'Unknown'}
           </p>
-          <p className="profile-stat-subtext">since {format(new Date(agent.employmentDate), 'MMM yyyy')}</p>
+          <p className="profile-stat-subtext">since {agent.employmentDate && !isNaN(new Date(agent.employmentDate).getTime()) ? format(new Date(agent.employmentDate), 'MMM yyyy') : 'Unknown'}</p>
         </div>
         <div className="card profile-stat-card">
           <p className="profile-stat-label">Shop Transfers</p>
@@ -243,9 +243,9 @@ export default function TeamMemberProfile() {
                       <div className="profile-history-dates">
                         <Calendar size={14} style={{ marginRight: '0.25rem' }} />
                         <span>
-                          {format(new Date(item.assignment.startDate), 'MMM dd, yyyy')} 
+                          {item.assignment.startDate && !isNaN(new Date(item.assignment.startDate).getTime()) ? format(new Date(item.assignment.startDate), 'MMM dd, yyyy') : 'Unknown'} 
                           {item.assignment.endDate 
-                            ? ` - ${format(new Date(item.assignment.endDate), 'MMM dd, yyyy')}`
+                            ? (!isNaN(new Date(item.assignment.endDate).getTime()) ? ` - ${format(new Date(item.assignment.endDate), 'MMM dd, yyyy')}` : ' - Unknown')
                             : ' - Present'
                           }
                         </span>
@@ -304,4 +304,3 @@ export default function TeamMemberProfile() {
     </div>
   );
 }
-
