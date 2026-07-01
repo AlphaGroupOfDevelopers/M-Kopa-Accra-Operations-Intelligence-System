@@ -32,7 +32,7 @@ class SalesService:
         existing = (
             db.query(SalesRecord)
             .filter(
-                SalesRecord.agent_id == sales_data.agent_id,
+                SalesRecord.dsr_id == sales_data.dsr_id,
                 SalesRecord.shop_id == sales_data.shop_id,
                 SalesRecord.sale_date == sales_data.sale_date,
             )
@@ -41,7 +41,7 @@ class SalesService:
 
         if existing:
             raise ValueError(
-                f"Sales record already exists for agent {sales_data.agent_id} "
+                f"Sales record already exists for DSR {sales_data.dsr_id} "
                 f"at shop {sales_data.shop_id} on {sales_data.sale_date}"
             )
 
@@ -62,7 +62,7 @@ class SalesService:
         db: Session,
         skip: int = 0,
         limit: int = 50,
-        agent_id: Optional[int] = None,
+        dsr_id: Optional[int] = None,
         shop_id: Optional[int] = None,
         start_date: Optional[date] = None,
         end_date: Optional[date] = None,
@@ -74,7 +74,7 @@ class SalesService:
             db: Database session
             skip: Number of records to skip
             limit: Maximum number of records to return
-            agent_id: Filter by agent ID
+            dsr_id: Filter by DSR ID
             shop_id: Filter by shop ID
             start_date: Filter by start date
             end_date: Filter by end date
@@ -84,8 +84,8 @@ class SalesService:
         """
         query = db.query(SalesRecord)
 
-        if agent_id:
-            query = query.filter(SalesRecord.agent_id == agent_id)
+        if dsr_id:
+            query = query.filter(SalesRecord.dsr_id == dsr_id)
 
         if shop_id:
             query = query.filter(SalesRecord.shop_id == shop_id)
@@ -178,7 +178,7 @@ class SalesService:
         query = db.query(
             func.sum(SalesRecord.devices_sold).label("total_devices"),
             func.count(SalesRecord.id).label("total_records"),
-            func.count(func.distinct(SalesRecord.agent_id)).label("active_agents"),
+            func.count(func.distinct(SalesRecord.dsr_id)).label("active_dsrs"),
             func.count(func.distinct(SalesRecord.shop_id)).label("reporting_shops"),
         ).filter(SalesRecord.sale_date == target_date)
 
@@ -191,7 +191,7 @@ class SalesService:
             "date": target_date,
             "total_devices": result.total_devices or 0,
             "total_records": result.total_records or 0,
-            "active_agents": result.active_agents or 0,
+            "active_dsrs": result.active_dsrs or 0,
             "reporting_shops": result.reporting_shops or 0,
         }
 

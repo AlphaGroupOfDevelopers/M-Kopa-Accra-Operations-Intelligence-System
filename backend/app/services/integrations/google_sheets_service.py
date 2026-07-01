@@ -195,10 +195,10 @@ class GoogleSheetsService:
             # Apply business day cutoff logic (6 AM rule)
             sale_date = self._apply_business_day_cutoff(submission_timestamp)
 
-            # Lookup agent by account number
-            agent = db.query(Agent).filter(Agent.account_number == account_number).first()
-            if not agent:
-                logger.warning(f"Agent not found for account number: {account_number}")
+            # Lookup DSR by account number
+            dsr = db.query(DSR).filter(DSR.account_number == account_number).first()
+            if not dsr:
+                logger.warning(f"DSR not found for account number: {account_number}")
                 return None
 
             # Lookup shop by ID
@@ -209,7 +209,7 @@ class GoogleSheetsService:
 
             # Create sales record schema
             return SalesRecordCreate(
-                agent_id=agent.id,
+                dsr_id=dsr.id,
                 shop_id=shop.id,
                 sale_date=sale_date,
                 devices_sold=devices_sold,
@@ -464,16 +464,16 @@ class GoogleSheetsService:
                     sales_record = self.map_row_to_sales_record(row, headers, db)
                     
                     if sales_record:
-                        # Check for duplicate (same agent + same date)
+                        # Check for duplicate (same DSR + same date)
                         existing = db.query(SalesRecord).filter_by(
-                            agent_id=sales_record.agent_id,
+                            dsr_id=sales_record.dsr_id,
                             sale_date=sales_record.sale_date
                         ).first()
                         
                         if existing:
                             # Duplicate found - UPDATE with latest submission
                             logger.info(
-                                f"Duplicate found for agent {sales_record.agent_id} "
+                                f"Duplicate found for DSR {sales_record.dsr_id} "
                                 f"on {sales_record.sale_date}. Updating with latest submission."
                             )
                             

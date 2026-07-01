@@ -97,7 +97,7 @@ def bulk_import_sales(
 def list_sales_records(
     page: int = Query(1, ge=1, description="Page number"),
     page_size: int = Query(50, ge=1, le=100, description="Items per page"),
-    agent_id: Optional[int] = Query(None, description="Filter by agent ID"),
+    dsr_id: Optional[int] = Query(None, description="Filter by DSR ID"),
     shop_id: Optional[int] = Query(None, description="Filter by shop ID"),
     start_date: Optional[date] = Query(None, description="Filter from date"),
     end_date: Optional[date] = Query(None, description="Filter to date"),
@@ -110,7 +110,7 @@ def list_sales_records(
     Args:
         page: Page number
         page_size: Items per page
-        agent_id: Filter by agent
+        dsr_id: Filter by DSR
         shop_id: Filter by shop
         start_date: Filter from date
         end_date: Filter to date
@@ -125,7 +125,7 @@ def list_sales_records(
         db,
         skip=skip,
         limit=page_size,
-        agent_id=agent_id,
+        dsr_id=dsr_id,
         shop_id=shop_id,
         start_date=start_date,
         end_date=end_date,

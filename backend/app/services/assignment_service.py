@@ -39,24 +39,27 @@ class AssignmentService:
         if not transfer_date:
             transfer_date = date.today()
 
-        # 1. Find the current active assignment
-        current_assignment = db.query(Assignment).filter(
+        # 1. Find all current active assignments
+        active_assignments = db.query(Assignment).filter(
             Assignment.dsr_id == dsr_id,
             Assignment.status == AssignmentStatus.ACTIVE
-        ).first()
+        ).all()
 
         # If they are already assigned to the target shop, do nothing
-        if current_assignment and current_assignment.shop_id == to_shop_id:
-            logger.info(f"DSR {dsr_id} is already assigned to shop {to_shop_id}. Transfer skipped.")
-            return None
+        for assignment in active_assignments:
+            if assignment.shop_id == to_shop_id:
+                logger.info(f"DSR {dsr_id} is already assigned to shop {to_shop_id}. Transfer skipped.")
+                return None
 
-        # 2. Complete the old assignment if it exists
+        # 2. Complete the old assignments if they exist
         from_shop_id = None
-        if current_assignment:
-            current_assignment.status = AssignmentStatus.COMPLETED
-            current_assignment.end_date = transfer_date
-            from_shop_id = current_assignment.shop_id
-            db.add(current_assignment)
+        for assignment in active_assignments:
+            assignment.status = AssignmentStatus.COMPLETED
+            assignment.end_date = transfer_date
+            # Take the shop_id from the first active assignment to log the transfer
+            if from_shop_id is None:
+                from_shop_id = assignment.shop_id
+            db.add(assignment)
 
         # 3. Create the new assignment
         new_assignment = Assignment(
