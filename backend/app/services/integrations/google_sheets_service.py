@@ -196,15 +196,21 @@ class GoogleSheetsService:
             sale_date = self._apply_business_day_cutoff(submission_timestamp)
 
             # Lookup DSR by account number
-            dsr = db.query(DSR).filter(DSR.account_number == account_number).first()
+            dsr = db.query(DSR).filter(
+                DSR.account_number == account_number,
+                DSR.deleted_at.is_(None)
+            ).first()
             if not dsr:
-                logger.warning(f"DSR not found for account number: {account_number}")
+                logger.warning(f"Active DSR not found for account number: {account_number}")
                 return None
 
             # Lookup shop by ID
-            shop = db.query(Shop).filter(Shop.id == shop_id).first()
+            shop = db.query(Shop).filter(
+                Shop.id == shop_id,
+                Shop.deleted_at.is_(None)
+            ).first()
             if not shop:
-                logger.warning(f"Shop not found for ID: {shop_id}")
+                logger.warning(f"Active shop not found for ID: {shop_id}")
                 return None
 
             # Create sales record schema
@@ -385,14 +391,20 @@ class GoogleSheetsService:
             Shop object or None
         """
         # Try by code first
-        shop = db.query(Shop).filter(Shop.code == identifier).first()
+        shop = db.query(Shop).filter(
+            Shop.code == identifier,
+            Shop.deleted_at.is_(None)
+        ).first()
         if shop:
             return shop
 
         # Try by ID if numeric
         try:
             shop_id = int(identifier)
-            shop = db.query(Shop).filter(Shop.id == shop_id).first()
+            shop = db.query(Shop).filter(
+                Shop.id == shop_id,
+                Shop.deleted_at.is_(None)
+            ).first()
             if shop:
                 return shop
         except ValueError:
@@ -400,7 +412,8 @@ class GoogleSheetsService:
 
         # Try by name (case-insensitive partial match)
         shop = db.query(Shop).filter(
-            Shop.name.ilike(f"%{identifier}%")
+            Shop.name.ilike(f"%{identifier}%"),
+            Shop.deleted_at.is_(None)
         ).first()
         
         return shop

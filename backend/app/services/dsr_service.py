@@ -3,8 +3,10 @@
 from typing import List, Optional
 
 from sqlalchemy.orm import Session
+from datetime import date
 
 from app.models.dsr import DSR, EmploymentStatus
+from app.models.assignment import Assignment, AssignmentStatus
 from app.schemas.dsr import DSRCreate, DSRUpdate
 
 
@@ -110,6 +112,20 @@ class DSRService:
 
         db.commit()
         db.refresh(dsr)
+        
+        # Sync status logic: If terminated or on leave, close active assignments
+        if dsr.employment_status in [EmploymentStatus.TERMINATED, EmploymentStatus.ON_LEAVE]:
+            active_assignments = db.query(Assignment).filter(
+                Assignment.dsr_id == dsr.id,
+                Assignment.status == AssignmentStatus.ACTIVE
+            ).all()
+            for assignment in active_assignments:
+                assignment.status = AssignmentStatus.COMPLETED
+                assignment.end_date = date.today()
+                db.add(assignment)
+            if active_assignments:
+                db.commit()
+
         return dsr
 
     @staticmethod
@@ -129,6 +145,17 @@ class DSRService:
             return False
 
         dsr.soft_delete()
+        
+        # Terminate active assignments to avoid ghost employees
+        active_assignments = db.query(Assignment).filter(
+            Assignment.dsr_id == dsr.id,
+            Assignment.status == AssignmentStatus.ACTIVE
+        ).all()
+        for assignment in active_assignments:
+            assignment.status = AssignmentStatus.TERMINATED
+            assignment.end_date = date.today()
+            db.add(assignment)
+            
         db.commit()
         return True
 

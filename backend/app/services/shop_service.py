@@ -3,8 +3,10 @@
 from typing import List, Optional
 
 from sqlalchemy.orm import Session
+from datetime import date
 
 from app.models.shop import Shop
+from app.models.assignment import Assignment, AssignmentStatus
 from app.schemas.shop import ShopCreate, ShopUpdate
 
 
@@ -132,6 +134,17 @@ class ShopService:
             return False
 
         shop.soft_delete()
+        
+        # Terminate active assignments to avoid stranded DSRs
+        active_assignments = db.query(Assignment).filter(
+            Assignment.shop_id == shop.id,
+            Assignment.status == AssignmentStatus.ACTIVE
+        ).all()
+        for assignment in active_assignments:
+            assignment.status = AssignmentStatus.TERMINATED
+            assignment.end_date = date.today()
+            db.add(assignment)
+            
         db.commit()
         return True
 
