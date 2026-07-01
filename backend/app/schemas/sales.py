@@ -12,7 +12,7 @@ from app.schemas.common import TimestampSchema
 class SalesRecordBase(BaseModel):
     """Base sales record schema."""
 
-    agent_id: int = Field(..., gt=0, description="Agent ID")
+    dsr_id: int = Field(..., gt=0, description="DSR ID")
     shop_id: int = Field(..., gt=0, description="Shop ID")
     sale_date: date = Field(..., description="Sale date")
     devices_sold: int = Field(..., ge=0, description="Number of devices sold")
@@ -49,7 +49,7 @@ class SalesRecordListItem(BaseModel):
     """Sales record list item (simplified)."""
 
     id: int
-    agent_id: int
+    dsr_id: int
     shop_id: int
     sale_date: date
     devices_sold: int

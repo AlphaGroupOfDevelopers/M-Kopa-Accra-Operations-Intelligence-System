@@ -9,14 +9,14 @@ import './ShopProfile.css'; // Reusing profile styles
 import './TeamMemberProfile.css';
 
 export default function TeamMemberProfile() {
-  const { agentId } = useParams<{ agentId: string }>();
+  const { dsrId } = useParams<{ dsrId: string }>();
   const { data: salesRecords } = useSalesRecords();
   const { data: agents } = useAgents();
   const { data: shops } = useShops();
   const { data: assignments } = useAssignments();
   
 
-  const agent = agents.find(a => a.id === agentId);
+  const agent = agents.find(a => a.id === dsrId);
   const currentShop = shops.find(s => s.id === agent?.currentShopId);
 
   const agentData = useMemo(() => {
@@ -24,7 +24,7 @@ export default function TeamMemberProfile() {
 
     // Get all assignments for this agent
     const agentAssignments = assignments
-      .filter(a => a.agentId === agent.id)
+      .filter(a => a.dsrId === agent.id)
       .sort((a, b) => new Date(b.startDate).getTime() - new Date(a.startDate).getTime());
 
     // Get last 30 days performance per assignment
@@ -42,7 +42,7 @@ export default function TeamMemberProfile() {
           if (assignment.role === 'assistant') {
              if (r.shopId !== assignment.shopId) return false;
           } else {
-             if (r.agentId !== agent.id || r.shopId !== assignment.shopId) return false;
+             if (r.dsrId !== agent.id || r.shopId !== assignment.shopId) return false;
           }
           const recordTime = new Date(r.date).getTime();
           return recordTime >= start && recordTime <= end;
@@ -69,7 +69,7 @@ export default function TeamMemberProfile() {
 
     // Calculate total sales directly from all sales records to ensure no sales are missed due to missing assignments
     const totalSales = salesRecords
-      .filter(r => r.agentId === agent.id)
+      .filter(r => r.dsrId === agent.id)
       .reduce((sum, r) => sum + r.devicesSold, 0);
 
     // Last 14 days trend
@@ -84,7 +84,7 @@ export default function TeamMemberProfile() {
           if (currentAssignment && currentAssignment.role === 'assistant') {
             return r.shopId === currentAssignment.shopId && r.date === dateStr;
           }
-          return r.agentId === agent.id && r.date === dateStr;
+          return r.dsrId === agent.id && r.date === dateStr;
         })
         .reduce((sum, r) => sum + r.devicesSold, 0);
       trendData.push({
@@ -151,7 +151,7 @@ export default function TeamMemberProfile() {
             <Phone className="profile-info-icon" size={20} />
             <div>
               <p className="profile-info-label">Phone</p>
-              <p className="profile-info-value">{agent.phone}</p>
+              <p className="profile-info-value">{agent.accountNumber}</p>
             </div>
           </div>
           <div className="profile-info-item">
@@ -175,12 +175,21 @@ export default function TeamMemberProfile() {
               <p className="profile-info-value">{agent.education}</p>
             </div>
           </div>
-          {agent.digitalAddress && (
+          {agent.address && (
             <div className="profile-info-item">
               <Hash className="profile-info-icon" size={20} />
               <div>
-                <p className="profile-info-label">Digital Address</p>
-                <p className="profile-info-value">{agent.digitalAddress}</p>
+                <p className="profile-info-label">Address</p>
+                <p className="profile-info-value">{agent.address}</p>
+              </div>
+            </div>
+          )}
+          {agent.educationInstitution && (
+            <div className="profile-info-item">
+              <GraduationCap className="profile-info-icon" size={20} />
+              <div>
+                <p className="profile-info-label">Institution</p>
+                <p className="profile-info-value">{agent.educationInstitution} {agent.educationYear ? `(${agent.educationYear})` : ''}</p>
               </div>
             </div>
           )}

@@ -21,7 +21,7 @@ export default function TeamMembers() {
 
     return agents.map(agent => {
       const agentSales = salesRecords
-        .filter(r => r.agentId === agent.id && r.date >= last7Days)
+        .filter(r => r.dsrId === agent.id && r.date >= last7Days)
         .reduce((sum, r) => sum + r.devicesSold, 0);
 
       const currentShop = shops.find(s => s.id === agent.currentShopId);
@@ -127,7 +127,7 @@ export default function TeamMembers() {
                 </div>
                 <div className="team-agent-detail-item">
                   <Phone size={14} style={{ marginRight: '0.5rem' }} />
-                  {agent.phone}
+                  {agent.accountNumber}
                 </div>
                 <div className="team-agent-detail-item" style={{ width: '100%', marginTop: '0.25rem' }}>
                   <span style={{ marginRight: '0.5rem' }}>🎂</span>

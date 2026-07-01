@@ -61,7 +61,7 @@ function AppRoutes() {
           >
             <Route index element={<Dashboard />} />
             <Route path="team-members" element={<TeamMembers />} />
-            <Route path="team-members/:agentId" element={<TeamMemberProfile />} />
+            <Route path="team-members/:dsrId" element={<TeamMemberProfile />} />
             <Route path="shops" element={<Shops />} />
             <Route path="shops/:shopId" element={<ShopProfile />} />
             <Route path="operations-intelligence" element={<OperationsIntelligence />} />

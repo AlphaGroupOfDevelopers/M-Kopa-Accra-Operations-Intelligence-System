@@ -11,14 +11,14 @@ export default function DataEntry() {
   const addSalesRecordMutation = useAddSalesRecord();
   
   const [formData, setFormData] = useState({
-    agentId: '',
+    dsrId: '',
     devicesSold: '',
     remarks: '',
     date: format(new Date(), 'yyyy-MM-dd'),
   });
   const [submitted, setSubmitted] = useState(false);
 
-  const selectedAgent = agents.find(a => a.id === formData.agentId);
+  const selectedAgent = agents.find(a => a.id === formData.dsrId);
   const assignedShop = selectedAgent ? shops.find(s => s.id === selectedAgent.currentShopId) : null;
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -30,7 +30,7 @@ export default function DataEntry() {
     }
 
     addSalesRecordMutation.mutate({
-      agentId: formData.agentId,
+      dsrId: formData.dsrId,
       shopId: assignedShop.id,
       date: formData.date,
       devicesSold: parseInt(formData.devicesSold),
@@ -41,7 +41,7 @@ export default function DataEntry() {
     setTimeout(() => {
       setSubmitted(false);
       setFormData({
-        agentId: '',
+        dsrId: '',
         devicesSold: '',
         remarks: '',
         date: format(new Date(), 'yyyy-MM-dd'),
@@ -83,8 +83,8 @@ export default function DataEntry() {
               <label>Select Agent</label>
               <select 
                 required
-                value={formData.agentId}
-                onChange={(e) => setFormData({...formData, agentId: e.target.value})}
+                value={formData.dsrId}
+                onChange={(e) => setFormData({...formData, dsrId: e.target.value})}
                 className="form-control"
               >
                 <option value="">-- Choose Agent --</option>
@@ -146,7 +146,7 @@ export default function DataEntry() {
               <button 
                 type="submit" 
                 className="btn btn-primary btn-block"
-                disabled={!formData.agentId || !formData.devicesSold || addSalesRecordMutation.isPending}
+                disabled={!formData.dsrId || !formData.devicesSold || addSalesRecordMutation.isPending}
               >
                 <PlusCircle size={18} />
                 {addSalesRecordMutation.isPending ? 'Submitting...' : 'Submit Sales Data'}

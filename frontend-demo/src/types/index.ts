@@ -2,13 +2,15 @@ export interface Agent {
   id: string;
   name: string;
   email: string;
-  phone: string;
+  accountNumber: string;
   dateOfBirth: string;
   education: string;
+  educationInstitution?: string;
+  educationYear?: number;
   employmentDate: string;
   currentShopId: string;
   status: 'active' | 'inactive';
-  digitalAddress?: string;
+  address?: string;
   photo?: string;
   role?: 'main' | 'assistant';
   secondaryNumber?: string;
@@ -32,7 +34,7 @@ export interface Shop {
 
 export interface Assignment {
   id: string;
-  agentId: string;
+  dsrId: string;
   shopId: string;
   startDate: string;
   endDate?: string;
@@ -42,7 +44,7 @@ export interface Assignment {
 
 export interface SalesRecord {
   id: string;
-  agentId: string;
+  dsrId: string;
   shopId: string;
   date: string;
   devicesSold: number;

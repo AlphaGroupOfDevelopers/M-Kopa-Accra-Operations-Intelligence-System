@@ -5,15 +5,17 @@ export const adaptAgent = (data: any): Agent => {
     id: data.id.toString(),
     name: data.full_name,
     email: data.email || '',
-    phone: (data.account_number && !data.account_number.startsWith('0') && !data.account_number.startsWith('+')) 
+    accountNumber: (data.account_number && !data.account_number.startsWith('0') && !data.account_number.startsWith('+')) 
       ? '0' + data.account_number 
       : (data.account_number || ''),
     dateOfBirth: data.date_of_birth || '',
     education: data.education_level || '',
+    educationInstitution: data.education_institution || '',
+    educationYear: data.education_year,
     employmentDate: data.employment_date || '',
     currentShopId: data.current_assignment?.shop_id?.toString() || '',
     status: data.employment_status === 'active' ? 'active' : 'inactive',
-    digitalAddress: data.address || '',
+    address: data.address || '',
     gender: data.gender || '',
     secondaryNumber: (data.secondary_number && !data.secondary_number.startsWith('0') && !data.secondary_number.startsWith('+')) 
       ? '0' + data.secondary_number 
@@ -42,7 +44,7 @@ export const adaptShop = (data: any): Shop => {
 export const adaptAssignment = (data: any): Assignment => {
   return {
     id: data.id.toString(),
-    agentId: data.dsr_id.toString(),
+    dsrId: data.dsr_id.toString(),
     shopId: data.shop_id.toString(),
     startDate: data.start_date,
     endDate: data.end_date,
@@ -53,7 +55,7 @@ export const adaptAssignment = (data: any): Assignment => {
 export const adaptSalesRecord = (data: any): SalesRecord => {
   return {
     id: data.id.toString(),
-    agentId: data.dsr_id.toString(),
+    dsrId: data.dsr_id.toString(),
     shopId: data.shop_id.toString(),
     date: data.sale_date,
     devicesSold: data.devices_sold,

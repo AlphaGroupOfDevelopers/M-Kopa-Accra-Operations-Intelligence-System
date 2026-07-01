@@ -27,8 +27,8 @@ export default function ShopProfile() {
     const shopAssignments = assignments.filter(a => a.shopId === shop.id);
 
     // Historical agents
-    const historicalAgentIds = new Set(shopAssignments.map(a => a.agentId));
-    const allAgentsWhoWorkedHere = agents.filter(a => historicalAgentIds.has(a.id));
+    const historicaldsrIds = new Set(shopAssignments.map(a => a.dsrId));
+    const allAgentsWhoWorkedHere = agents.filter(a => historicaldsrIds.has(a.id));
 
     // Total sales
     const totalSales = salesRecords
@@ -38,7 +38,7 @@ export default function ShopProfile() {
     // Current agents performance
     const agentPerformance = currentAgents.map(agent => {
       const agentSales = salesRecords
-        .filter(r => r.agentId === agent.id && r.shopId === shop.id)
+        .filter(r => r.dsrId === agent.id && r.shopId === shop.id)
         .reduce((sum, r) => sum + r.devicesSold, 0);
       return {
         agent,
@@ -63,7 +63,7 @@ export default function ShopProfile() {
 
     // Historical staff tenure
     const staffTenure = shopAssignments.map(assignment => {
-      const agent = agents.find(a => a.id === assignment.agentId);
+      const agent = agents.find(a => a.id === assignment.dsrId);
       const start = new Date(assignment.startDate).getTime();
       const end = assignment.endDate ? new Date(assignment.endDate).getTime() : new Date().getTime();
       const daysActive = differenceInDays(end, start) + 1;

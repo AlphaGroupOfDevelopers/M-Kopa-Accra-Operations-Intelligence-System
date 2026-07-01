@@ -89,3 +89,16 @@ class AssignmentService:
             db.refresh(transfer_record)
             
         return transfer_record
+
+    @staticmethod
+    def list_assignments(
+        db: Session,
+        skip: int = 0,
+        limit: int = 100,
+    ) -> tuple[list[Assignment], int]:
+        """List assignments."""
+        query = db.query(Assignment)
+        total = query.count()
+        assignments = query.offset(skip).limit(limit).all()
+        return assignments, total
+

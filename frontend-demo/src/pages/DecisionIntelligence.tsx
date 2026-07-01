@@ -24,7 +24,7 @@ export default function DecisionIntelligence() {
     });
 
     const agentMetrics = agents.map(agent => {
-      const sales = recentRecords.filter(r => r.agentId === agent.id).reduce((sum, r) => sum + r.devicesSold, 0);
+      const sales = recentRecords.filter(r => r.dsrId === agent.id).reduce((sum, r) => sum + r.devicesSold, 0);
       const currentShop = shops.find(s => s.id === agent.currentShopId);
       const expectedPotential = (currentShop?.baseTraffic || 1) * 60;
       const aec = calculateAEC(sales, expectedPotential);

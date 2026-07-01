@@ -65,7 +65,7 @@ export default function PerformanceIntelligence() {
 
     // 2. Agent Effectiveness Coefficient (AEC)
     const agentEffectiveness = agents.map(agent => {
-      const sales = recentRecords.filter(r => r.agentId === agent.id).reduce((sum, r) => sum + r.devicesSold, 0);
+      const sales = recentRecords.filter(r => r.dsrId === agent.id).reduce((sum, r) => sum + r.devicesSold, 0);
       const shop = shops.find(s => s.id === agent.currentShopId);
       
       // Expected sales based on shop traffic multiplier

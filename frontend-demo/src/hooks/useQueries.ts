@@ -56,7 +56,7 @@ export const useAddSalesRecord = () => {
   return useMutation({
     mutationFn: async (newRecord: Partial<SalesRecord>) => {
       const payload = {
-        dsr_id: parseInt(newRecord.agentId || '0'),
+        dsr_id: parseInt(newRecord.dsrId || '0'),
         shop_id: parseInt(newRecord.shopId || '0'),
         sale_date: newRecord.date,
         devices_sold: newRecord.devicesSold,

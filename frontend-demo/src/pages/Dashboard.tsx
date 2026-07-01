@@ -54,7 +54,7 @@ export default function Dashboard() {
     // Agent performance
     const agentPerformance = agents.map(agent => {
       const agentSales = salesRecords
-        .filter(r => r.agentId === agent.id && r.date >= last7Days)
+        .filter(r => r.dsrId === agent.id && r.date >= last7Days)
         .reduce((sum, r) => sum + r.devicesSold, 0);
       return { agent, sales: agentSales };
     }).sort((a, b) => b.sales - a.sales);
