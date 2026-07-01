@@ -1,5 +1,5 @@
+import { useSalesRecords, useAgents, useShops } from '../hooks/useQueries';
 import { useMemo } from 'react';
-import { useApp } from '../context/AppContext';
 import { TrendingUp, Target, Award, Zap } from 'lucide-react';
 import { format, subDays } from 'date-fns';
 import { calculateSPI, calculateAEC } from '../utils/intelligenceMath';
@@ -7,7 +7,10 @@ import './Dashboard.css';
 import './SalesIntelligence.css';
 
 export default function PerformanceIntelligence() {
-  const { salesRecords, shops, agents } = useApp();
+  const { data: salesRecords } = useSalesRecords();
+  const { data: agents } = useAgents();
+  const { data: shops } = useShops();
+  
 
   const performance = useMemo(() => {
     const last30Days = format(subDays(new Date(), 30), 'yyyy-MM-dd');

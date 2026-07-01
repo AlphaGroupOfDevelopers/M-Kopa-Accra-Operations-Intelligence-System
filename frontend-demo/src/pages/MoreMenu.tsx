@@ -1,5 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { useApp } from '../context/AppContext';
+import { useAppContext } from '../context/AppContext';
 import { 
   LayoutDashboard, 
   TrendingUp, 
@@ -12,7 +12,8 @@ import {
 import './MoreMenu.css';
 
 export default function MoreMenu() {
-  const { logout, currentUser } = useApp();
+  
+  const { logout, currentUser } = useAppContext();
   const navigate = useNavigate();
 
   const handleLogout = () => {

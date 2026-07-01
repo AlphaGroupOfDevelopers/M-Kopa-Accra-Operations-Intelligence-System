@@ -16,7 +16,7 @@ from loguru import logger
 def main():
     """Run Google Sheets sync."""
     logger.info("=" * 60)
-    logger.info("M-Kopa AOIS - Google Sheets Sync")
+    logger.info("M-Kopa Management System - Google Sheets Sync")
     logger.info("=" * 60)
 
     # Check configuration

@@ -15,7 +15,7 @@ class UserBase(BaseModel):
 class UserCreate(UserBase):
     """User creation schema."""
 
-    password: str = Field(..., min_length=6, description="User password")
+    password: str = Field(..., min_length=5, description="User password")
     is_superuser: bool = Field(False, description="Superuser status")
 
 
@@ -24,7 +24,7 @@ class UserUpdate(BaseModel):
 
     email: EmailStr | None = Field(None, description="User email address")
     full_name: str | None = Field(None, min_length=1, max_length=255, description="Full name")
-    password: str | None = Field(None, min_length=6, description="New password")
+    password: str | None = Field(None, min_length=5, description="New password")
     is_active: bool | None = Field(None, description="Active status")
 
 

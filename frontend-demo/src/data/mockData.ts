@@ -1,4 +1,4 @@
-// Mock Data for M-Kopa AOIS Demo: ODSS Transformation
+// Mock Data for M-Kopa Management System Demo: ODSS Transformation
 import { subDays, format } from 'date-fns';
 import type { Agent, Shop, Assignment, SalesRecord } from '../types';
 

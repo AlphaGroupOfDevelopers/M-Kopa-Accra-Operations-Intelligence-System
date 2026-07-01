@@ -1,6 +1,6 @@
+import { useSalesRecords, useAgents, useShops, useAssignments } from '../hooks/useQueries';
 import { useMemo } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { useApp } from '../context/AppContext';
 import { ArrowLeft, MapPin, Store, Calendar } from 'lucide-react';
 import { format, differenceInDays } from 'date-fns';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
@@ -9,7 +9,11 @@ import './ShopProfile.css';
 
 export default function ShopProfile() {
   const { shopId } = useParams<{ shopId: string }>();
-  const { shops, agents, assignments, salesRecords } = useApp();
+  const { data: salesRecords } = useSalesRecords();
+  const { data: agents } = useAgents();
+  const { data: shops } = useShops();
+  const { data: assignments } = useAssignments();
+  
 
   const shop = shops.find(s => s.id === shopId);
 

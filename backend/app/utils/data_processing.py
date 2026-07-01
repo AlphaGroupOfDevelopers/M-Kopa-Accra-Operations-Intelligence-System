@@ -5,7 +5,7 @@ from datetime import date, timedelta
 from typing import Optional, Dict, Any
 from loguru import logger
 
-from app.models.agent import EducationLevel
+from app.models.dsr import EducationLevel
 
 
 class ShopNameStandardizer:
@@ -37,8 +37,9 @@ class ShopNameStandardizer:
         if not raw_shop_name:
             raise ValueError("Shop name cannot be empty")
         
-        # Clean up
+        # Clean up punctuation and spacing
         name = raw_shop_name.strip()
+        name = re.sub(r'[,.]', '', name)  # Remove commas and periods
         name = re.sub(r'\s+', ' ', name)  # Multiple spaces to single
         name = name.replace('-', ' ')     # Dashes to spaces
         
@@ -50,10 +51,10 @@ class ShopNameStandardizer:
         
         name_lower = name.lower()
         for suffix in suffixes_to_remove:
-            if name_lower.endswith(suffix):
+            if name_lower.endswith(" " + suffix) or name_lower == suffix:
                 name = name[:-(len(suffix))].strip()
                 break
-        
+                
         # Extract outlet and location
         outlet = None
         location = name
@@ -88,7 +89,23 @@ class ShopNameStandardizer:
             logger.warning(f"No outlet found in '{raw_shop_name}', defaulting to MTN")
             outlet = "MTN"
             location = name
+            
+        # Clean up location prefix and spelling
+        location = location.strip()
+        location_lower = location.lower()
+        for prefix in suffixes_to_remove:
+            if location_lower.startswith(prefix + " "):
+                location = location[(len(prefix) + 1):].strip()
+                break
+                
+        # Fix specific spelling mistakes
+        location = re.sub(r'(?i)\bdarkumah\b', 'Darkuman', location)
+        location = re.sub(r'(?i)\bachimota mall\b', 'Achimota Mall', location)
         
+        # If location is exactly Achimota, let's map it to Achimota Mall as per request
+        if location.lower() == 'achimota':
+            location = 'Achimota Mall'
+            
         # Title case the location
         location = cls._title_case_location(location)
         

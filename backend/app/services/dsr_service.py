@@ -151,8 +151,7 @@ class DSRService:
             .filter(
                 DSR.deleted_at.is_(None),
                 (
-                    DSR.first_name.ilike(search_pattern)
-                    | DSR.last_name.ilike(search_pattern)
+                    DSR.full_name.ilike(search_pattern)
                     | DSR.account_number.ilike(search_pattern)
                     | DSR.email.ilike(search_pattern)
                 ),

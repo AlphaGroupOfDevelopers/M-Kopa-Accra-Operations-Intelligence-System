@@ -64,7 +64,7 @@ class Assignment(Base, TimestampMixin):
     start_date: Mapped[date] = mapped_column(Date, nullable=False, index=True)
     end_date: Mapped[date | None] = mapped_column(Date, nullable=True, index=True)
     status: Mapped[AssignmentStatus] = mapped_column(
-        SQLEnum(AssignmentStatus, name="assignment_status_enum", create_constraint=True),
+        SQLEnum(AssignmentStatus, name="assignment_status_enum", create_constraint=True, values_callable=lambda obj: [e.value for e in obj]),
         default=AssignmentStatus.ACTIVE,
         nullable=False,
         index=True
@@ -132,7 +132,7 @@ class TransferRecord(Base, TimestampMixin):
     )
     transfer_date: Mapped[date] = mapped_column(Date, nullable=False, index=True)
     reason: Mapped[TransferReason] = mapped_column(
-        SQLEnum(TransferReason, name="transfer_reason_enum", create_constraint=True),
+        SQLEnum(TransferReason, name="transfer_reason_enum", create_constraint=True, values_callable=lambda obj: [e.value for e in obj]),
         nullable=False
     )
     reason_detail: Mapped[str | None] = mapped_column(Text, nullable=True)

@@ -11,7 +11,7 @@ from loguru import logger
 from sqlalchemy.orm import Session
 
 from app.core import settings
-from app.models.agent import Agent
+from app.models.dsr import DSR
 from app.models.shop import Shop
 from app.models.sales_record import SalesRecord
 from app.schemas.sales import SalesRecordCreate

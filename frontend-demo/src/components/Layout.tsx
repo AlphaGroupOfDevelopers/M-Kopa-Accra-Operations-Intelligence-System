@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
-import { useApp } from '../context/AppContext';
+import { useAppContext } from '../context/AppContext';
 import { 
   LayoutDashboard, 
   Users, 
@@ -19,7 +19,8 @@ import {
 import './Layout.css';
 
 export default function Layout() {
-  const { logout, currentUser } = useApp();
+  
+  const { logout, currentUser } = useAppContext();
   const navigate = useNavigate();
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);

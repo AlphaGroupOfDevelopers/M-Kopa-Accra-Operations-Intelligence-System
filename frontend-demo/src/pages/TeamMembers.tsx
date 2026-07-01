@@ -1,5 +1,5 @@
+import { useSalesRecords, useAgents, useShops } from '../hooks/useQueries';
 import { useMemo, useState } from 'react';
-import { useApp } from '../context/AppContext';
 import { Link } from 'react-router-dom';
 import { Search, Users, Mail, Phone } from 'lucide-react';
 import { subDays, format } from 'date-fns';
@@ -8,7 +8,10 @@ import './Shops.css'; // For shops-grid, search classes
 import './TeamMembers.css';
 
 export default function TeamMembers() {
-  const { agents, salesRecords, shops } = useApp();
+  const { data: salesRecords } = useSalesRecords();
+  const { data: agents } = useAgents();
+  const { data: shops } = useShops();
+  
   const [searchTerm, setSearchTerm] = useState('');
 
   const agentsWithStats = useMemo(() => {

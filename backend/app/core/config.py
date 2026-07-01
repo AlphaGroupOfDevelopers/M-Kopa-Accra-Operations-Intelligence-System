@@ -1,4 +1,4 @@
-"""Core configuration settings for the M-Kopa AOIS application."""
+"""Core configuration settings for the M-Kopa Management System application."""
 
 from typing import Any, List, Optional
 from pydantic import AnyHttpUrl, PostgresDsn, RedisDsn, field_validator
@@ -16,7 +16,7 @@ class Settings(BaseSettings):
     )
 
     # Application
-    APP_NAME: str = "M-Kopa AOIS API"
+    APP_NAME: str = "M-Kopa Management System API"
     APP_VERSION: str = "1.0.0"
     DEBUG: bool = False
     ENVIRONMENT: str = "production"

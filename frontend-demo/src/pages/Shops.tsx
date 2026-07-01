@@ -1,5 +1,5 @@
+import { useSalesRecords, useAgents, useShops } from '../hooks/useQueries';
 import { useMemo, useState } from 'react';
-import { useApp } from '../context/AppContext';
 import { Link } from 'react-router-dom';
 import { Search, Store, MapPin, Users, TrendingUp } from 'lucide-react';
 import { subDays, format } from 'date-fns';
@@ -7,7 +7,10 @@ import './Dashboard.css';
 import './Shops.css';
 
 export default function Shops() {
-  const { shops, salesRecords, agents } = useApp();
+  const { data: salesRecords } = useSalesRecords();
+  const { data: agents } = useAgents();
+  const { data: shops } = useShops();
+  
   const [searchTerm, setSearchTerm] = useState('');
 
   const shopsWithStats = useMemo(() => {

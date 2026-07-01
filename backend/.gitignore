@@ -58,6 +58,9 @@ storage/
 # Testing
 .pytest_cache/
 .coverage
+
+# Credentials
+credentials/
 htmlcov/
 .tox/
 .hypothesis/

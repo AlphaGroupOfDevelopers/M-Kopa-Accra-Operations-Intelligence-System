@@ -68,7 +68,7 @@ class DSR(Base, TimestampMixin, SoftDeleteMixin):
 
     # Education
     education_level: Mapped[EducationLevel | None] = mapped_column(
-        SQLEnum(EducationLevel, name="education_level_enum", create_constraint=True),
+        SQLEnum(EducationLevel, name="education_level_enum", create_constraint=True, values_callable=lambda obj: [e.value for e in obj]),
         nullable=True
     )
     education_institution: Mapped[str | None] = mapped_column(String(255), nullable=True)
@@ -77,7 +77,7 @@ class DSR(Base, TimestampMixin, SoftDeleteMixin):
     # Employment
     employment_date: Mapped[date | None] = mapped_column(Date, nullable=True)
     employment_status: Mapped[EmploymentStatus] = mapped_column(
-        SQLEnum(EmploymentStatus, name="employment_status_enum", create_constraint=True),
+        SQLEnum(EmploymentStatus, name="employment_status_enum", create_constraint=True, values_callable=lambda obj: [e.value for e in obj]),
         default=EmploymentStatus.ACTIVE,
         nullable=False,
         server_default="active"

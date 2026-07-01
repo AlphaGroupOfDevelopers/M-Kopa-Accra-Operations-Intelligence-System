@@ -1,6 +1,6 @@
+import { useSalesRecords, useAgents, useShops, useAssignments } from '../hooks/useQueries';
 import { useMemo } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { useApp } from '../context/AppContext';
 import { ArrowLeft, Mail, Phone, Calendar, GraduationCap, MapPin, User, Hash } from 'lucide-react';
 import { format, formatDistance, differenceInDays, differenceInYears } from 'date-fns';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
@@ -10,7 +10,11 @@ import './TeamMemberProfile.css';
 
 export default function TeamMemberProfile() {
   const { agentId } = useParams<{ agentId: string }>();
-  const { agents, shops, assignments, salesRecords } = useApp();
+  const { data: salesRecords } = useSalesRecords();
+  const { data: agents } = useAgents();
+  const { data: shops } = useShops();
+  const { data: assignments } = useAssignments();
+  
 
   const agent = agents.find(a => a.id === agentId);
   const currentShop = shops.find(s => s.id === agent?.currentShopId);

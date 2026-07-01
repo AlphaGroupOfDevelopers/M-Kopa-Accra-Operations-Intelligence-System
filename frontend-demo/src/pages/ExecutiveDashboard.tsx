@@ -1,5 +1,5 @@
+import { useSalesRecords, useAgents, useShops } from '../hooks/useQueries';
 import { useMemo } from 'react';
-import { useApp } from '../context/AppContext';
 import { AlertTriangle, FileDown, Calendar, Award, TrendingUp } from 'lucide-react';
 import { format, subDays, startOfMonth } from 'date-fns';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, BarChart, Bar, XAxis, YAxis, CartesianGrid, Legend } from 'recharts';
@@ -7,7 +7,10 @@ import './Dashboard.css';
 import './ExecutiveDashboard.css';
 
 export default function ExecutiveDashboard() {
-  const { salesRecords, shops, agents } = useApp();
+  const { data: salesRecords } = useSalesRecords();
+  const { data: agents } = useAgents();
+  const { data: shops } = useShops();
+  
 
   const executiveData = useMemo(() => {
     const today = format(new Date(), 'yyyy-MM-dd');

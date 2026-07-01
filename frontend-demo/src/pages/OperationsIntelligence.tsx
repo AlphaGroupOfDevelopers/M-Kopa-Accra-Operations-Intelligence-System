@@ -1,5 +1,5 @@
+import { useSalesRecords, useShops } from '../hooks/useQueries';
 import { useMemo } from 'react';
-import { useApp } from '../context/AppContext';
 import { AlertTriangle, MessageSquare, Activity } from 'lucide-react';
 import { format, subDays } from 'date-fns';
 import { clusterRemarksNLP, calculateZScore } from '../utils/intelligenceMath';
@@ -7,7 +7,9 @@ import './Dashboard.css';
 import './OperationsIntelligence.css';
 
 export default function OperationsIntelligence() {
-  const { salesRecords, shops } = useApp();
+  const { data: salesRecords } = useSalesRecords();
+  const { data: shops } = useShops();
+  
 
   const operations = useMemo(() => {
     const today = format(new Date(), 'yyyy-MM-dd');

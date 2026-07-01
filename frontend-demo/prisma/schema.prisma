@@ -1,0 +1,213 @@
+generator client {
+  output          = "../generated/prisma"
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id              Int              @id @default(autoincrement())
+  email           String           @unique
+  fullName        String           @map("full_name")
+  hashedPassword  String           @map("hashed_password")
+  isActive        Boolean          @default(true) @map("is_active")
+  isSuperuser     Boolean          @default(false) @map("is_superuser")
+  createdAt       DateTime         @default(now()) @map("created_at")
+  updatedAt       DateTime         @updatedAt @map("updated_at")
+
+  verifiedSalesRecords SalesRecord[]
+  approvedTransfers    TransferRecord[]
+
+  @@map("users")
+}
+
+model Shop {
+  id          Int       @id @default(autoincrement())
+  name        String
+  location    String
+  region      String    @default("Greater Accra")
+  district    String?
+  description String?
+  isActive    Boolean   @default(true) @map("is_active")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+  deletedAt   DateTime? @map("deleted_at")
+
+  assignments    Assignment[]
+  salesRecords   SalesRecord[]
+  transfersFrom  TransferRecord[] @relation("TransferFromShop")
+  transfersTo    TransferRecord[] @relation("TransferToShop")
+
+  @@unique([name, location], name: "uq_shop_name_location")
+  @@map("shops")
+}
+
+enum EmploymentStatus {
+  ACTIVE      @map("active")
+  INACTIVE    @map("inactive")
+  ON_LEAVE    @map("on_leave")
+  TERMINATED  @map("terminated")
+  @@map("employment_status_enum")
+}
+
+enum EducationLevel {
+  HIGH_SCHOOL @map("high_school")
+  DIPLOMA     @map("diploma")
+  BACHELOR    @map("bachelor")
+  MASTER      @map("master")
+  PHD         @map("phd")
+  OTHER       @map("other")
+  @@map("education_level_enum")
+}
+
+model DSR {
+  id                    Int               @id @default(autoincrement())
+  accountNumber         String            @unique @map("account_number")
+  fullName              String            @map("full_name")
+  email                 String?           @unique
+  secondaryNumber       String?           @map("secondary_number")
+  
+  dateOfBirth           DateTime?         @map("date_of_birth") @db.Date
+  gender                String?
+  address               String?
+  
+  educationLevel        EducationLevel?   @map("education_level")
+  educationInstitution  String?           @map("education_institution")
+  educationYear         Int?              @map("education_year")
+  
+  employmentDate        DateTime?         @map("employment_date") @db.Date
+  employmentStatus      EmploymentStatus  @default(ACTIVE) @map("employment_status")
+  
+  emergencyContactName  String?           @map("emergency_contact_name")
+  emergencyContactPhone String?           @map("emergency_contact_phone")
+  
+  notes                 String?
+  
+  createdAt             DateTime          @default(now()) @map("created_at")
+  updatedAt             DateTime          @updatedAt @map("updated_at")
+  deletedAt             DateTime?         @map("deleted_at")
+
+  assignments           Assignment[]
+  salesRecords          SalesRecord[]
+  transfers             TransferRecord[]
+
+  @@map("dsrs")
+}
+
+enum AssignmentStatus {
+  ACTIVE      @map("active")
+  COMPLETED   @map("completed")
+  TERMINATED  @map("terminated")
+  @@map("assignment_status_enum")
+}
+
+model Assignment {
+  id         Int              @id @default(autoincrement())
+  dsrId      Int              @map("dsr_id")
+  shopId     Int              @map("shop_id")
+  startDate  DateTime         @map("start_date") @db.Date
+  endDate    DateTime?        @map("end_date") @db.Date
+  status     AssignmentStatus @default(ACTIVE)
+  teamName   String?          @map("team_name")
+  role       String?
+  notes      String?
+
+  createdAt  DateTime         @default(now()) @map("created_at")
+  updatedAt  DateTime         @updatedAt @map("updated_at")
+
+  dsr        DSR              @relation(fields: [dsrId], references: [id], onDelete: Cascade)
+  shop       Shop             @relation(fields: [shopId], references: [id], onDelete: Cascade)
+
+  @@map("assignments")
+  @@index([dsrId])
+  @@index([shopId])
+  @@index([startDate])
+  @@index([endDate])
+}
+
+enum TransferReason {
+  PERFORMANCE_IMPROVEMENT @map("performance_improvement")
+  SHOP_NEEDS              @map("shop_needs")
+  AGENT_REQUEST           @map("agent_request")
+  DISCIPLINARY            @map("disciplinary")
+  RESTRUCTURING           @map("restructuring")
+  OTHER                   @map("other")
+  @@map("transfer_reason_enum")
+}
+
+model TransferRecord {
+  id                  Int             @id @default(autoincrement())
+  dsrId               Int             @map("dsr_id")
+  fromShopId          Int             @map("from_shop_id")
+  toShopId            Int             @map("to_shop_id")
+  transferDate        DateTime        @map("transfer_date") @db.Date
+  reason              TransferReason
+  reasonDetail        String?         @map("reason_detail")
+  approvedById        Int?            @map("approved_by")
+  effectivenessScore  Int?            @map("effectiveness_score")
+  notes               String?
+
+  createdAt           DateTime        @default(now()) @map("created_at")
+  updatedAt           DateTime        @updatedAt @map("updated_at")
+
+  dsr                 DSR             @relation(fields: [dsrId], references: [id], onDelete: Cascade)
+  fromShop            Shop            @relation("TransferFromShop", fields: [fromShopId], references: [id], onDelete: Cascade)
+  toShop              Shop            @relation("TransferToShop", fields: [toShopId], references: [id], onDelete: Cascade)
+  approvedBy          User?           @relation(fields: [approvedById], references: [id], onDelete: SetNull)
+
+  @@map("transfer_records")
+  @@index([dsrId])
+  @@index([fromShopId])
+  @@index([toShopId])
+  @@index([transferDate])
+}
+
+enum DataSource {
+  GOOGLE_FORMS     @map("google_forms")
+  MICROSOFT_FORMS  @map("microsoft_forms")
+  MANUAL_ENTRY     @map("manual_entry")
+  API              @map("api")
+  @@map("data_source_enum")
+}
+
+model SalesRecord {
+  id           Int         @id @default(autoincrement())
+  dsrId        Int         @map("dsr_id")
+  shopId       Int         @map("shop_id")
+  saleDate     DateTime    @map("sale_date") @db.Date
+  devicesSold  Int         @default(0) @map("devices_sold")
+  remarks      String?
+  dataSource   DataSource  @default(GOOGLE_FORMS) @map("data_source")
+  externalId   String?     @unique @map("external_id")
+  verified     Boolean     @default(false)
+  verifiedById Int?        @map("verified_by")
+
+  createdAt    DateTime    @default(now()) @map("created_at")
+  updatedAt    DateTime    @updatedAt @map("updated_at")
+
+  dsr          DSR         @relation(fields: [dsrId], references: [id], onDelete: Cascade)
+  shop         Shop        @relation(fields: [shopId], references: [id], onDelete: Cascade)
+  verifiedBy   User?       @relation(fields: [verifiedById], references: [id], onDelete: SetNull)
+
+  @@map("sales_records")
+  @@index([dsrId])
+  @@index([shopId])
+  @@index([saleDate])
+}
+
+model PublicHoliday {
+  id          Int      @id @default(autoincrement())
+  date        DateTime @unique @db.Date
+  name        String
+  countryCode String   @default("GH") @map("country_code")
+
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("public_holidays")
+  @@index([date])
+  @@index([countryCode])
+}

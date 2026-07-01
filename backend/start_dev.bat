@@ -1,8 +1,8 @@
 @echo off
-REM M-Kopa AOIS - Development Server Startup Script
+REM M-Kopa Management System - Development Server Startup Script
 
 echo ========================================
-echo M-Kopa AOIS Backend Development Server
+echo M-Kopa Management System Backend Dev Server
 echo ========================================
 echo.
 

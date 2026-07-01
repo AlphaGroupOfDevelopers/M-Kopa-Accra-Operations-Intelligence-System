@@ -1,5 +1,5 @@
+import { useSalesRecords, useAgents, useShops } from '../hooks/useQueries';
 import { useMemo } from 'react';
-import { useApp } from '../context/AppContext';
 import { GitMerge, Brain, ArrowRight, TrendingUp } from 'lucide-react';
 import { calculateAEC } from '../utils/intelligenceMath';
 import { format, subDays } from 'date-fns';
@@ -7,7 +7,10 @@ import './Dashboard.css';
 import './DecisionIntelligence.css';
 
 export default function DecisionIntelligence() {
-  const { salesRecords, shops, agents } = useApp();
+  const { data: salesRecords } = useSalesRecords();
+  const { data: agents } = useAgents();
+  const { data: shops } = useShops();
+  
 
   const decisions = useMemo(() => {
     const last30Days = format(subDays(new Date(), 30), 'yyyy-MM-dd');

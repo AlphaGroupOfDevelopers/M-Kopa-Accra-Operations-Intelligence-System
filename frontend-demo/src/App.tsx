@@ -1,51 +1,61 @@
+import React, { Suspense } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { AppProvider, useApp } from './context/AppContext';
+import { AppProvider, useAppContext } from './context/AppContext';
 import Layout from './components/Layout';
-import Login from './pages/Login';
-import Dashboard from './pages/Dashboard';
-import TeamMembers from './pages/TeamMembers';
-import TeamMemberProfile from './pages/TeamMemberProfile';
-import Shops from './pages/Shops';
-import ShopProfile from './pages/ShopProfile';
-import PerformanceIntelligence from './pages/PerformanceIntelligence';
-import OperationsIntelligence from './pages/OperationsIntelligence';
-import ExecutiveDashboard from './pages/ExecutiveDashboard';
-import DataEntry from './pages/DataEntry';
-import MoreMenu from './pages/MoreMenu';
 
-import DecisionIntelligence from './pages/DecisionIntelligence';
+const Login = React.lazy(() => import('./pages/Login'));
+const Dashboard = React.lazy(() => import('./pages/Dashboard'));
+const TeamMembers = React.lazy(() => import('./pages/TeamMembers'));
+const TeamMemberProfile = React.lazy(() => import('./pages/TeamMemberProfile'));
+const Shops = React.lazy(() => import('./pages/Shops'));
+const ShopProfile = React.lazy(() => import('./pages/ShopProfile'));
+const PerformanceIntelligence = React.lazy(() => import('./pages/PerformanceIntelligence'));
+const OperationsIntelligence = React.lazy(() => import('./pages/OperationsIntelligence'));
+const ExecutiveDashboard = React.lazy(() => import('./pages/ExecutiveDashboard'));
+const DataEntry = React.lazy(() => import('./pages/DataEntry'));
+const MoreMenu = React.lazy(() => import('./pages/MoreMenu'));
+const DecisionIntelligence = React.lazy(() => import('./pages/DecisionIntelligence'));
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
-  const { isAuthenticated } = useApp();
+  const { isAuthenticated } = useAppContext();
   return isAuthenticated ? <>{children}</> : <Navigate to="/login" />;
 }
+
+// Simple loading fallback
+const LoadingFallback = () => (
+  <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+    <div className="spinner">Loading...</div>
+  </div>
+);
 
 function AppRoutes() {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route
-          path="/"
-          element={
-            <PrivateRoute>
-              <Layout />
-            </PrivateRoute>
-          }
-        >
-          <Route index element={<Dashboard />} />
-          <Route path="team-members" element={<TeamMembers />} />
-          <Route path="team-members/:agentId" element={<TeamMemberProfile />} />
-          <Route path="shops" element={<Shops />} />
-          <Route path="shops/:shopId" element={<ShopProfile />} />
-          <Route path="operations-intelligence" element={<OperationsIntelligence />} />
-          <Route path="performance-intelligence" element={<PerformanceIntelligence />} />
-          <Route path="decision-intelligence" element={<DecisionIntelligence />} />
-          <Route path="executive" element={<ExecutiveDashboard />} />
-          <Route path="data-entry" element={<DataEntry />} />
-          <Route path="more" element={<MoreMenu />} />
-        </Route>
-      </Routes>
+      <Suspense fallback={<LoadingFallback />}>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route
+            path="/"
+            element={
+              <PrivateRoute>
+                <Layout />
+              </PrivateRoute>
+            }
+          >
+            <Route index element={<Dashboard />} />
+            <Route path="team-members" element={<TeamMembers />} />
+            <Route path="team-members/:agentId" element={<TeamMemberProfile />} />
+            <Route path="shops" element={<Shops />} />
+            <Route path="shops/:shopId" element={<ShopProfile />} />
+            <Route path="operations-intelligence" element={<OperationsIntelligence />} />
+            <Route path="performance-intelligence" element={<PerformanceIntelligence />} />
+            <Route path="decision-intelligence" element={<DecisionIntelligence />} />
+            <Route path="executive" element={<ExecutiveDashboard />} />
+            <Route path="data-entry" element={<DataEntry />} />
+            <Route path="more" element={<MoreMenu />} />
+          </Route>
+        </Routes>
+      </Suspense>
     </BrowserRouter>
   );
 }

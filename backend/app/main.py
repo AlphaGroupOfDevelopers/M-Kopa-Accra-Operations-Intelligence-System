@@ -25,7 +25,7 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
         None during application runtime
     """
     # Startup
-    logger.info("Starting M-Kopa AOIS API...")
+    logger.info("Starting M-Kopa Management System API...")
     logger.info(f"Environment: {settings.ENVIRONMENT}")
     logger.info(f"Debug Mode: {settings.DEBUG}")
 
@@ -40,7 +40,7 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     yield
 
     # Shutdown
-    logger.info("Shutting down M-Kopa AOIS API...")
+    logger.info("Shutting down M-Kopa Management System API...")
     logger.info("Application shutdown complete")
 
 
@@ -51,7 +51,7 @@ setup_logging()
 app = FastAPI(
     title=settings.APP_NAME,
     version=settings.APP_VERSION,
-    description="M-Kopa Accra Operations Intelligence System - Backend API",
+    description="M-Kopa Management System - Backend API",
     docs_url="/docs",
     redoc_url="/redoc",
     openapi_url=f"{settings.API_V1_PREFIX}/openapi.json",
@@ -99,7 +99,7 @@ async def root() -> JSONResponse:
     """
     return JSONResponse(
         content={
-            "message": "M-Kopa AOIS API",
+            "message": "M-Kopa Management System API",
             "version": settings.APP_VERSION,
             "docs": "/docs",
             "health": "/health",

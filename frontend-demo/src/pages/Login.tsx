@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useApp } from '../context/AppContext';
+import { useAppContext } from '../context/AppContext';
 import { Eye, EyeOff } from 'lucide-react';
 import './Login.css';
 
@@ -9,14 +9,21 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
-  const { login } = useApp();
+  
+  const { login } = useAppContext();
   const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     
-    if (login(email, password)) {
+    if (!email || !password) {
+      setError('Please enter both email and password');
+      return;
+    }
+    
+    const success = await login(email, password);
+    if (success) {
       navigate('/');
     } else {
       setError('Invalid credentials');
@@ -41,7 +48,7 @@ export default function Login() {
           <div className="login-native-input-group">
             <label className="login-native-label">Email Address</label>
             <input
-              type="email"
+              type="text"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="login-native-input"
@@ -69,20 +76,21 @@ export default function Login() {
             </button>
           </div>
 
-          {error && (
-            <div className="login-native-error">{error}</div>
-          )}
+          {error && <div className="login-native-error">{error}</div>}
 
-          <button type="submit" className="login-native-submit">
-            LOGIN
+          <div className="login-native-options">
+            <label className="login-native-checkbox">
+              <input type="checkbox" />
+              <span>Remember me</span>
+            </label>
+            <a href="#" className="login-native-forgot">Forgot Password?</a>
+          </div>
+
+          <button type="submit" className="login-native-btn">
+            Login
           </button>
         </form>
-
-        <div className="login-native-footer">
-          <button className="login-native-forgot">Forgot Password?</button>
-        </div>
       </div>
     </div>
   );
 }
-

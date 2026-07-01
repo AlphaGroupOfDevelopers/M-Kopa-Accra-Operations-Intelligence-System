@@ -57,7 +57,7 @@ class SalesRecord(Base, TimestampMixin):
     devices_sold: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
     remarks: Mapped[str | None] = mapped_column(Text, nullable=True)
     data_source: Mapped[DataSource] = mapped_column(
-        SQLEnum(DataSource, name="data_source_enum", create_constraint=True),
+        SQLEnum(DataSource, name="data_source_enum", create_constraint=True, values_callable=lambda obj: [e.value for e in obj]),
         default=DataSource.GOOGLE_FORMS,
         nullable=False
     )

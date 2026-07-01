@@ -1,15 +1,9 @@
-import { createContext, useContext, useState, type ReactNode } from 'react';
-import { agents, shops, assignments, salesRecords } from '../data/mockData';
-import type { Agent, Shop, Assignment, SalesRecord } from '../types';
+import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
+import { api } from '../services/api';
 
 interface AppContextType {
-  agents: Agent[];
-  shops: Shop[];
-  assignments: Assignment[];
-  salesRecords: SalesRecord[];
-  addSalesRecord: (record: Omit<SalesRecord, 'id'>) => void;
   isAuthenticated: boolean;
-  login: (email: string, password: string) => boolean;
+  login: (email: string, password: string) => Promise<boolean>;
   logout: () => void;
   currentUser: { name: string; email: string; role: string } | null;
 }
@@ -19,11 +13,37 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 export function AppProvider({ children }: { children: ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [currentUser, setCurrentUser] = useState<{ name: string; email: string; role: string } | null>(null);
-  const [localSalesRecords, setLocalSalesRecords] = useState(salesRecords);
 
-  const login = (email: string, password: string) => {
-    // Demo login - accept any email/password
-    if (email && password) {
+  useEffect(() => {
+    // Check if token exists on mount
+    const token = localStorage.getItem('access_token');
+    if (token) {
+      // Ideally, fetch user profile here. For now, we assume authenticated.
+      setIsAuthenticated(true);
+      setCurrentUser({
+        name: 'Operations Manager',
+        email: 'admin',
+        role: 'Operations Manager',
+      });
+    }
+  }, []);
+
+  const login = async (email: string, password: string) => {
+    try {
+      // FastAPI OAuth2PasswordRequestForm expects x-www-form-urlencoded
+      const formData = new URLSearchParams();
+      formData.append('username', email);
+      formData.append('password', password);
+      
+      const response = await api.post('/auth/login', formData, {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      });
+      
+      const { access_token } = response.data;
+      localStorage.setItem('access_token', access_token);
+      
       setIsAuthenticated(true);
       setCurrentUser({
         name: 'Operations Manager',
@@ -31,31 +51,21 @@ export function AppProvider({ children }: { children: ReactNode }) {
         role: 'Operations Manager',
       });
       return true;
+    } catch (error) {
+      console.error("Login failed:", error);
+      return false;
     }
-    return false;
   };
 
   const logout = () => {
+    localStorage.removeItem('access_token');
     setIsAuthenticated(false);
     setCurrentUser(null);
-  };
-
-  const addSalesRecord = (record: Omit<SalesRecord, 'id'>) => {
-    const newRecord: SalesRecord = {
-      ...record,
-      id: `record${Date.now()}`,
-    };
-    setLocalSalesRecords(prev => [...prev, newRecord]);
   };
 
   return (
     <AppContext.Provider
       value={{
-        agents,
-        shops,
-        assignments,
-        salesRecords: localSalesRecords,
-        addSalesRecord,
         isAuthenticated,
         login,
         logout,
@@ -67,10 +77,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
   );
 }
 
-export function useApp() {
+export function useAppContext() {
   const context = useContext(AppContext);
   if (context === undefined) {
-    throw new Error('useApp must be used within an AppProvider');
+    throw new Error('useAppContext must be used within an AppProvider');
   }
   return context;
 }

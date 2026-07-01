@@ -1,8 +1,8 @@
 @echo off
-REM M-Kopa AOIS - Windows Setup Script
+REM M-Kopa Management System - Windows Setup Script
 
 echo ========================================
-echo M-Kopa AOIS Backend - Windows Setup
+echo M-Kopa Management System Backend - Windows Setup
 echo ========================================
 echo.
 

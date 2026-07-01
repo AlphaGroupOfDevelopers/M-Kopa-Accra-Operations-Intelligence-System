@@ -1,5 +1,5 @@
+import { useSalesRecords, useAgents, useShops } from '../hooks/useQueries';
 import { useMemo } from 'react';
-import { useApp } from '../context/AppContext';
 import { format, subDays } from 'date-fns';
 import { TrendingUp, TrendingDown, Users, AlertTriangle, Award } from 'lucide-react';
 import { XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Area, AreaChart } from 'recharts';
@@ -7,7 +7,10 @@ import { Link } from 'react-router-dom';
 import './Dashboard.css';
 
 export default function Dashboard() {
-  const { salesRecords, agents, shops } = useApp();
+  const { data: salesRecords } = useSalesRecords();
+  const { data: agents } = useAgents();
+  const { data: shops } = useShops();
+  
 
   const stats = useMemo(() => {
     const today = format(new Date(), 'yyyy-MM-dd');
