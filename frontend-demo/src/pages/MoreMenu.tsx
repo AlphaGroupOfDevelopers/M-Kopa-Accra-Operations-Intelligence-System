@@ -5,7 +5,6 @@ import {
   TrendingUp, 
   LogOut,
   Lightbulb,
-  FileText,
   User,
   ChevronRight
 } from 'lucide-react';
@@ -25,7 +24,6 @@ export default function MoreMenu() {
     { path: '/executive', icon: LayoutDashboard, label: 'Executive Dashboard' },
     { path: '/performance-intelligence', icon: TrendingUp, label: 'Sales Performance' },
     { path: '/decision-intelligence', icon: Lightbulb, label: 'Recommendations' },
-    { path: '/data-entry', icon: FileText, label: 'Reports' },
   ];
 
   return (

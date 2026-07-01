@@ -16,11 +16,11 @@ export default function TeamMembers() {
   const [sortOrder, setSortOrder] = useState('high');
 
   const agentsWithStats = useMemo(() => {
-    const last30Days = format(subDays(new Date(), 30), 'yyyy-MM-dd');
+    const last7Days = format(subDays(new Date(), 7), 'yyyy-MM-dd');
 
     return agents.map(agent => {
       const agentSales = salesRecords
-        .filter(r => r.agentId === agent.id && r.date >= last30Days)
+        .filter(r => r.agentId === agent.id && r.date >= last7Days)
         .reduce((sum, r) => sum + r.devicesSold, 0);
 
       const currentShop = shops.find(s => s.id === agent.currentShopId);
@@ -28,7 +28,7 @@ export default function TeamMembers() {
       return {
         ...agent,
         totalSales: agentSales,
-        avgDailySales: (agentSales / 30).toFixed(1),
+        avgDailySales: (agentSales / 7).toFixed(1),
         currentShopName: currentShop?.name || 'Unknown',
       };
     }).sort((a, b) => sortOrder === 'high' ? b.totalSales - a.totalSales : a.totalSales - b.totalSales);
@@ -115,7 +115,7 @@ export default function TeamMembers() {
 
               <div className="team-agent-stats">
                 <div>
-                  <p className="shop-stat-label">30-Day Sales</p>
+                  <p className="shop-stat-label">7-Day Sales</p>
                   <p className="shop-stat-value">{agent.totalSales}</p>
                 </div>
                 <div>

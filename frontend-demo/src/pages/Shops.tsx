@@ -15,11 +15,11 @@ export default function Shops() {
   const [sortOrder, setSortOrder] = useState('high');
 
   const shopsWithStats = useMemo(() => {
-    const last30Days = format(subDays(new Date(), 30), 'yyyy-MM-dd');
+    const last7Days = format(subDays(new Date(), 7), 'yyyy-MM-dd');
 
     return shops.map(shop => {
       const shopSales = salesRecords
-        .filter(r => r.shopId === shop.id && r.date >= last30Days)
+        .filter(r => r.shopId === shop.id && r.date >= last7Days)
         .reduce((sum, r) => sum + r.devicesSold, 0);
 
       const currentAgents = agents.filter(a => a.currentShopId === shop.id);
@@ -120,7 +120,7 @@ export default function Shops() {
 
               <div className="shop-stats-grid">
                 <div>
-                  <p className="shop-stat-label">30-Day Sales</p>
+                  <p className="shop-stat-label">7-Day Sales</p>
                   <p className="shop-stat-value">{shop.totalSales}</p>
                 </div>
                 <div>
