@@ -1,6 +1,6 @@
 """DSR (Direct Sales Representative) schemas."""
 
-from datetime import date
+from datetime import date, datetime
 from typing import Optional
 
 from pydantic import BaseModel, EmailStr, Field
@@ -73,6 +73,6 @@ class DSRListItem(BaseModel):
     full_name: str
     email: Optional[EmailStr]
     employment_status: EmploymentStatus
-    created_at: date
+    created_at: datetime
 
     model_config = {"from_attributes": True}
